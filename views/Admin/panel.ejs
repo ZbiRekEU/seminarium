@@ -1,0 +1,203 @@
+<%- contentFor('Partials/HeaderStyle') %>
+<link href="public/assets/plugins/c3/c3.min.css" rel="stylesheet" type="text/css" />
+
+<%- contentFor('breadcrumb') %>
+<div class="row">
+    <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item"><a href="#">Administrator</a></li>
+                      <li class="breadcrumb-item active">Kokpit</li>
+                  </ol>
+               </div>
+               <h4 class="page-title">Kokpit</h4>
+         </div>
+      </div>
+</div>
+
+<%- contentFor('body') %>
+              <div class="row">
+                    <div class="col-md-6 col-xl-3">
+                        <div class="mini-stat clearfix bg-white">
+                            <span class="mini-stat-icon bg-purple mr-0 float-right"><i class="mdi mdi-basket"></i></span>
+                            <div class="mini-stat-info">
+                                <span class="counter text-purple"><%= allOrders %></span>
+                                Wszystkich Zamówień
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="mini-stat clearfix bg-white">
+                            <span class="mini-stat-icon bg-blue-grey mr-0 float-right"><i class="mdi mdi-black-mesa"></i></span>
+                            <div class="mini-stat-info">
+                                <span class="counter text-blue-grey"><%= todayOrders %></span>
+                                Dzisiejszych Zamówień
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="mini-stat clearfix bg-white">
+                            <span class="mini-stat-icon bg-brown mr-0 float-right"><i class="mdi mdi-buffer"></i></span>
+                            <div class="mini-stat-info">
+                                <span class="counter text-brown"><%= todayUsers %></span>
+                                Nowych Użytkowników
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="mini-stat clearfix bg-white">
+                            <span class="mini-stat-icon bg-teal mr-0 float-right"><i class="mdi mdi-coffee"></i></span>
+                            <div class="mini-stat-info">
+                                <span class="counter text-teal"><%= allUsers %></span>
+                                Wszystkich Użytkowników
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                              <div class="row">
+                                <div class="col-6">
+                                  <h4 class="mt-0 m-b-30 header-title">Ostatnie zamówienia</h4>
+                                </div>
+                                <div class="col-6">
+                                  <a href="/wszystkie-zamowienia">
+                                    <button type="button" class="btn btn-secondary btn-sm waves-effect float-right">Zobacz wszystkie</button>
+                                  </a>
+                                </div>
+                              </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-vertical mb-0">
+                                        <tbody>
+                                        <% lastOrders.forEach((order) => { %>
+                                        <tr>
+                                            <td>
+                                                <!-- <img src="public/assets/images/users/avatar-2.jpg" alt="user-image" class="thumb-sm rounded-circle mr-2"/> -->
+                                                <%= order.customer_name %>
+                                                <p class="m-0 text-muted font-14">Odbiorca</p>
+                                            </td>
+                                            <td>
+                                              <% switch(order.status) {
+                                                case 'złożone' : %>
+                                                  <span class="badge badge-secondary">Zamówienie złożone</span>
+                                                <% break;
+                                                case 'przygotowane' : %>
+                                                  <span class="badge badge-info">Dostarczone na magazyn</span>
+                                                <% break;
+                                                case 'wysłane' : %>
+                                                  <span class="badge badge-primary">W drodze</span>
+                                                <% break;
+                                                  case 'zrealizowane' : %>
+                                                  <span class="badge badge-success">Dostarczone</span>
+																								<% break;
+                                                  case 'zwrot' : %>
+                                                  <span class="badge badge-success">Wydano klientowi (zwrot)</span>
+																								<% break;
+                                                default: %>
+                                                  <span class="badge badge-secondary">Nieznany</span>
+                                                <% break;
+                                              }
+                                              %>
+                                            </td>
+                                            <td>
+                                                <%= order.price %> pln
+                                                <p class="m-0 text-muted font-14">Kwota</p>
+                                            </td>
+                                            <td>
+                                                <%= order.date %>
+                                                <p class="m-0 text-muted font-14">Data</p>
+                                            </td>
+                                            <td>
+                                                <a href="/karta-przewozowa?id=<%= order.order_id %>">
+                                                  <button type="button" class="btn btn-secondary btn-sm waves-effect">Karta przewozowa</button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                                <div class="row">
+                                  <div class="col-6">
+                                    <h4 class="mt-0 m-b-30 header-title">Nowi użytkownicy</h4>
+                                  </div>
+                                  <div class="col-6">
+                                    <a href="/wszyscy-uzytkownicy">
+                                      <button type="button" class="btn btn-secondary btn-sm waves-effect float-right">Zobacz wszystkich</button>
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-vertical mb-0">
+
+                                        <tbody>
+                                        <% lastUsers.forEach((user) => { %>
+                                        <tr>
+                                            <td>#<%= user.id %></td>
+                                            <td>
+                                                <img src="<% if(user.avatar) { %>public/images/<%= user.avatar %><% } else { %>public/assets/images/products/1.jpg<% } %>" alt="user-image" style="height: 46px;" class="rounded mr-2" />
+                                                <%= user.name %> <%= user.surname %>
+                                            </td>
+                                            <td><span class="badge badge-pill badge-success">Użytkownik</span>
+                                              <p class="m-0 text-muted font-14">Ranga</p>
+                                            </td>
+                                            <td>
+                                                <%= user.username %>
+                                            </td>
+                                            <td>
+                                                <%= user.date %>
+                                            </td>
+                                            <td>
+                                                <a  href="/edytuj-uzytkownika?nazwa=<%= user.username %>">
+                                                  <button type="button" class="btn btn-secondary btn-sm waves-effect">Edytuj</button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<%- contentFor('FooterJs') %>
+<script src="public/assets/plugins/peity-chart/jquery.peity.min.js"></script>
+<!--C3 Chart-->
+<script src="public/assets/plugins/d3/d3.min.js"></script>
+<script src="public/assets/plugins/c3/c3.min.js"></script>
+<!-- KNOB JS -->
+<script src="public/assets/plugins/jquery-knob/excanvas.js"></script>
+<script src="public/assets/plugins/jquery-knob/jquery.knob.js"></script>
+<!-- Page specific js -->
+<script src="public/assets/pages/dashboard.js"></script>
+
+ <%- contentFor('BottomJs') %>

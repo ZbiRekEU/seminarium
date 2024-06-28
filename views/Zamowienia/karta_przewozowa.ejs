@@ -1,0 +1,239 @@
+<%- contentFor('HeaderCss') %>
+    <%- contentFor('breadcrumb') %>
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Strony</a></li>
+                            <li class="breadcrumb-item active">Karta przewozowa</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Karta przewozowa</h4>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            @media print {
+
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+
+                body {
+                    -webkit-print-color-adjust: exact;
+                }
+
+                .highlight {
+                    background: url(//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=4ead34) !important;
+                }
+            }
+        </style>
+        <style>
+            .highlight {
+                background: url(//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=4ead34);
+            }
+        </style>
+
+        <%- contentFor('body') %>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-20">
+                        <div class="card-body" id="karta_przewozowa">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h3 class="m-t-0">
+                                                <img src="public/assets/images/logo.png" alt="logo" height="56" />
+                                            </h3>
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-center">
+                                            <div class="qrcode ">
+                                                <div id="qrcode-<%= products[0].order_id %>"></div>
+                                                <script type="text/javascript">
+                                                    var qrcode = new QRCode(document.getElementById("qrcode-<%= products[0].order_id %>"), {
+                                                        text: "https://system.verniro-trans.pl/skanuj-list-przewozowy?id=<%= products[0].order_id %>",
+                                                        width: 200,
+                                                        height: 200,
+                                                        colorDark: "#000000",
+                                                        colorLight: "#ffffff",
+                                                        correctLevel: QRCode.CorrectLevel.H
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="invoice-title">
+                                                <h4 class="pull-right font-16 d-none d-lg-block"><strong>Karta
+                                                        przewozowa: #<%= data.id %></strong></h4>
+                                                <h4 class=" pull-right font-16 d-lg-none"><strong>Karta przewozowa: #<%=
+                                                            data.id %></strong></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                    <!-- <div class="row">
+                                          <div class="col-12">
+                                              <h4 class="font-16"><strong>Karta przewozowa: #</strong></h4>
+                                          </div>
+                                        </div> -->
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <address>
+                                                <strong>Odbiorca:</strong><br>
+                                                <%= data.customer_name %><br>
+                                                    <%= data.customer_phone %><br>
+                                                        <%= data.postal_code %>
+                                                            <%= data.city %><br>
+                                                                <%= data.street %>
+                                                                    <%= data.house_number %>
+                                                                        <% if(data.apartment_number){ %> / <%=
+                                                                                data.apartment_number %>
+                                                                                <% } %><br>
+
+                                            </address>
+
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <address>
+                                                <strong>Nadawca:</strong><br>
+                                                <%= user.name %>
+                                                    <%= user.surname %><br>
+                                                        <%= user.full_name %><br>
+                                                            <%= user.nip %><br>
+                                                                <%= user.phone %> <br>
+                                                                    <%= user.postal_code %>
+                                                                        <%= user.city %><br>
+                                                                            <%= user.street %>
+                                                                                <%= user.house_number %>
+                                                                                    <% if(user.apartment_number){ %> /
+                                                                                        <%= user.apartment_number %>
+                                                                                            <% } %><br>
+
+
+                                            </address>
+                                            <% if(data.bringing=='1' ){ %> <strong>Dostawa z wniesieniem</strong><br>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="panel panel-default">
+
+                                        <h3 class="panel-title font-20"><strong>Zamówione przedmioty:</strong></h3>
+
+                                        <div class="produkty">
+                                            <table class="table table-bordered table-center-text">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#Id Produktu</th>
+                                                        <th scope="col">Nazwa</th>
+                                                        <th scope="col">Ilość sztuk</th>
+                                                        <th scope="col">Ilość paczek</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% products.forEach((product)=> { %>
+                                                        <tr>
+                                                            <th scope="row">#<%= product.product_id.split('-')[0] %>
+                                                            </th>
+                                                            <td>
+                                                                <%= product.name %>
+                                                            </td>
+                                                            <td>
+                                                                <%= product.product_amount %>
+                                                            </td>
+                                                            <td>
+                                                                <%= product.package_amount %>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                            <tr>
+                                                                <th scope="col" colspan="3" class="text-right">Łączna
+                                                                    liczba paczek</th>
+                                                                <td>
+                                                                    <%= data.allPackages %>
+                                                                </td>
+                                                            </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="d-print-none p-2">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end row -->
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    Biorąc pod uwagę bezpieczeństwo naszych kierowców, oraz nie narażanie ich na
+                                    nadmierny wysiłek, zgodnie z regulaminem naszych usług, transport nie obejmuje
+                                    wniesienia.
+                                    Potwierdzam odbiór kompletnej, nieuszkodzonej mechanicznie przesyłki zgodnej ze
+                                    złożonym zamówieniem.
+                                </div>
+                            </div><!-- end row -->
+                            <div class="row">
+                                <div class="col-3 m-t-30">
+                                    <address>
+                                        <strong>Płatność:</strong><br>
+                                        Status: <%= data.payment %><br>
+                                            <% if(data.payment==='Pobranie' ){%>
+                                                <span class="highlight px-2"> Kwota: <%= data.price %> zł</span>
+                                                <%}else{%>
+                                                    Kwota: <%= data.price %>
+                                                        <%}%>
+                                    </address>
+                                </div>
+                                <div class="col-3 m-t-30 text-right">
+                                    <address>
+
+                                        <strong>Data złożenia zamówienia:</strong><br>
+                                        <%= data.date %><br><br>
+                                    </address>
+                                </div>
+                                <div class="col-3">
+                                    <div class="podpisy"><br><br><br>
+                                        ................................ <br>
+                                        <strong>Potwierdzam odbiór</strong>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="podpisy"><br><br><br>
+                                        ................................ <br>
+                                        <strong>Data i ilość odebranych paczek</strong>
+                                    </div>
+                                    <div class="d-print-none p-2">
+                                        <div class="pull-right">
+                                            <a href="javascript:window.print()"
+                                                class="btn btn-success waves-effect waves-light"><i
+                                                    class="fa fa-print"></i></a>
+                                            <!-- <a href="" id="karta_przewozowa" onclick="generatePDF()" class="btn btn-primary waves-effect waves-light">Pobierz jako pdf</a> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+            <%- contentFor('FooterJs') %>
+                <!-- <script src="https://raw.githubusercontent.com/eKoopmans/html2pdf.js/master/dist/html2pdf.bundle.min.js"></script> -->
+                <%- contentFor('BottomJs') %>
+                    <script>
+                        $(window).on('load', function () {
+                            let products = JSON.parse('<%- JSON.stringify(products) %>');
+                        });
+                    </script>

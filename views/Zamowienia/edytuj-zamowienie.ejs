@@ -1,0 +1,557 @@
+<%- contentFor('HeaderCss') %>
+  <link href="public/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<%- contentFor('breadcrumb') %>
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item"><a href="/moje-zamowienia">Zamówienia</a></li>
+                      <li class="breadcrumb-item active">Edytuj</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">Edytuj Zamówienie</h4>
+          </div>
+      </div>
+  </div>
+	<style>
+		.checkbox-style {
+			float: left;
+			margin-right: 20px;
+			width: unset;
+		}
+		.notification {
+			display: unset; 
+   		width: unset;
+			margin-left: 15px;
+		}
+	</style>
+<%- contentFor('body') %>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+
+                              <div class="row">
+                                <div class="col-6">
+                                  <h4 class="mt-0 header-title">Edytuj zamówienie #<%= order.id %></h4>
+                                  <p class="text-muted m-b-30 font-14">Wypełnij wszystkie pola poniżej</p>
+                                </div>
+                                <div class="col-6">
+                                  <button type="button" id="sendOffer" class="btn btn-success waves-effect waves-light buttonSubmit col-4 float-right" value="validate" style="margin: 10px -10px 0px;">Zapisz zmiany</button>
+                                </div>
+                              </div>
+
+
+                                <form action="/edytuj-zamowienie" method="post" id="mainform">
+                                  <input type="hidden" name="order_id" id="order_id" value="<%= order.order_id %>">
+                                  <input type="hidden" name="productJSON" id="productList" value="" />
+                                    <div class="row">
+                                      <div class="col-sm-8 card " style="padding-top: 5px;">
+                                        <div class="row">
+
+                                          <div class="col-sm-4">
+                                              <div class="form-group">
+                                                  <label for="customer_name">Nazwa Odbiorcy</label>
+                                                  <input id="customer_name" name="customer_name" type="text" class="form-control" value="<%= order.customer_name %>" required>
+                                              </div>
+                                          </div>
+                                          
+                                          <div class="col-lg-3 ">
+                                            <div class="form-group">
+                                              <label for="postal_code">Kod pocztowy</label>
+                                              <input id="postal_code" name="postal_code" type="text" class="form-control" value="<%= order.postal_code %>" required >
+                                            </div>
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="city">Miejscowość</label>
+                                                <input id="city" name="city" type="text" class="form-control" value="<%= order.city %>" required>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+
+                                          <div class="col-sm-4">
+                                              <div class="form-group">
+                                                  <label for="street">Ulica</label>
+                                                  <input id="street" name="street" type="text" class="form-control" value="<%= order.street %>" required>
+                                              </div>
+                                          </div>
+                                        
+                                        <div class="col-lg-2" style="padding-right: 0px">
+                                          <div class="form-group">
+                                            <label for="house_number">Numer domu</label>
+                                            <input id="house_number" name="house_number" type="text" class="form-control" value="<%= order.house_number %>" required>
+                                          </div>
+                                        </div>
+                                        
+                                        <div class="col-lg-2" style="">
+                                          <div class="form-group">
+                                            <label for="apartment_number">Mieszkanie</label>
+                                            <input id="apartment_number" name="apartment_number" type="text" value="<%= order.apartment_number %>" class="form-control">
+                                          </div>
+                                        </div>
+                                        
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="customer_phone">Numer telefonu</label>
+                                                  <input id="customer_phone" name="customer_phone" type="text" class="form-control" data-parsley-type="number" value="<%= order.customer_phone %>" required>
+                                              </div>
+                                          </div>
+                                        
+                                         
+                                        </div>
+                                        <div class="row">
+                                          
+                                          <div class="col-2">
+                                            <div class="form-group">
+                                               <label class="control-label">Forma płatności</label>
+                                                <select class="form-control select2" id="platnosc" name="payment" required>
+                                                    <optgroup label="Wybierz">
+                                                      <% switch(order.payment) { case 'Pobranie' : %>
+                                                      <option value="Pobranie" selected>Pobranie</option>
+                                                      <option value="Opłacone" >Opłacone</option>
+                                                      <% break; case 'Opłacone' : %>
+                                                      <option value="Pobranie">Pobranie</option>
+                                                      <option value="Opłacone" selected>Opłacone</option>
+                                                      <% break; default: %>
+                                                      <option value="Pobranie">Pobranie</option>
+                                                      <option value="Opłacone">Opłacone</option>
+                                                      <% break;} %>
+                                                </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <div class="form-group">
+                                                <label for="price">Kwota</label>
+                                                <input id="price" name="price" type="text" class="form-control" value="<%= order.price %>">
+                                              </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                              <div class="form-group">
+                                                <label for="additional_info">Dodatkowe informacje</label>
+                                                <input id="additional_info" name="additional_info" type="text" class="form-control" value="<%= order.additional_info %>">
+                                              </div>
+                                            </div>
+                                            <div class=" col-md-3 form-group d-flex align-items-end">
+                                              <input id="bringing" name="bringing" type="checkbox" <% if(order.bringing == '1'){ %> checked <% } %> class="form-control checkbox-style notification_checkbox">
+                                              <label for="bringing" >Dostawa z wniesieniem</label>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+ 
+                                            
+                                            <div class="col-md-3 float-right">
+                                            <div class="form-group ">
+                                              <input type="hidden" name="prev_status" id="prev_status" value="<%= order.status %>" />
+                                              <input type="hidden" name="prev_delivery_confirmation_status" id="prev_delivery_confirmation_status" value="<%= order.planned_delivery_date_status %>" />
+                                              <input type="hidden" name="prev_delivery_date" id="prev_delivery_date" value="<%= order.planned_date %>" />
+                                              <input type="hidden" name="prev_delivery_time" id="prev_delivery_time" value="<%= order.planned_time %>" />
+                                              <label class="control-label">Status przesyłki</label>
+                                              <select class="form-control select2 col-12" id="status_przesylki" name="status">
+                                                <% switch(order.status) { case 'złożone' : %>
+                                                  <option value="złożone" selected>Zamówienie Złożone</option>
+                                                  <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                  <option value="wysłane">W drodze</option>
+                                                  <option value="zrealizowane">Dostarczone</option>
+                                                  <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'przygotowane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" selected class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'wysłane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane" selected>W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'zrealizowane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane" selected>Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'zwrot' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot" selected>Wydano klientowi (zwrot)</option>
+                                                <% break; default: %>
+                                                <option value="złożone">Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break;} %>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="status_additional_info">Szczegóły statusu przesyłki</label>
+                                              <input id="status_additional_info" name="status_additional_info" type="text" class="form-control" value="<%= order.status_details %>">
+                                            </div>
+                                          </div>
+                                          <div class="col-3">
+                                            <div class="form-group">
+                                              <label class="control-label">Dostawa czy odbiór od klienta?</label>
+                                              <select class="form-control select2" value="<%= order.direction %>" id="direction" name="direction" required>
+                                                <optgroup label="Wybierz">
+                                                  <%if(order.direction== 'Odbiór'){%>
+                                                  <option value="Dostawa">Dostawa</option>
+                                                  <option value="Odbiór" selected>Odbiór</option>
+                                                  <%}else{%>
+                                                    <option value="Dostawa" selected>Dostawa</option>
+                                                    <option value="Odbiór">Odbiór</option>
+                                                  <%}%>
+                                                </select>
+                                              </div>
+                                          </div>
+                                                                                
+
+                                        </div>
+                                      </div>
+                                      <div class="col-sm-2 ">
+                                        <div class="card row" style="padding: 10px 20px 30px 20px; margin-left: 10px;">
+
+                                          <div class="form-group">
+                                            <label for="planned_date">Planowana data dostawy</label>
+                                            <input id="planned_date" name="planned_date" type="text" value="<%= order.planned_date %>" class="form-control">
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="planned_time">Planowana godzina dostawy</label>
+                                            <input id="planned_time" name="planned_time" type="text" value="<%= order.planned_time %>" class="form-control">
+                                          </div>
+                                          <%if(order.planned_delivery_date_status!==''){%>
+                                          <div class="form-group">
+                                              <label class="control-label">Status potwierdzenia dostawy</label>
+                                              <select class="form-control select3" id="deliveryConfirmationStatus" name="deliveryConfirmationStatus" required>
+                                                  <optgroup label="Wybierz">
+                                                    <% switch(order.planned_delivery_date_status) { case 'Nie potwierdzono' : %>
+                                                    <option value="Nie potwierdzono" selected>Nie potwierdzono</option>
+                                                    <option value="Potwierdzono" >Potwierdzono</option>
+                                                    <option value="Odrzucono" >Odrzucono</option>
+                                                    <% break; case 'Potwierdzono' : %>
+                                                    <option value="Nie potwierdzono">Nie potwierdzono</option>
+                                                    <option value="Potwierdzono" selected>Potwierdzono</option>
+                                                    <option value="Odrzucone" >Odrzucono</option>
+                                                    <% break; case 'Odrzucono' : %>
+                                                    <option value="Nie potwierdzono">Nie potwierdzono</option>
+                                                    <option value="Potwierdzono">Potwierdzono</option>
+                                                    <option value="Odrzucone" selected>Odrzucono</option>
+                                                    <% break; default: %>
+                                                    <option value="Nie potwierdzono">Nie potwierdzono</option>
+                                                    <option value="Potwierdzono">Potwierdzono</option>
+                                                    <option value="Odrzucono">Odrzucono</option>
+                                                    <% break;} %>
+                                              </select>
+                                            </div>
+                                            <%}%>
+                                          <div class="form-group">
+                                            <label for="driver_phone">Numer telefonu kierowcy</label>
+                                            <input id="driver_phone" name="driver_phone" type="text" value="<%= order.driver_phone %>" class="form-control">
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label">Rozliczone</label>
+                                             <select class="form-control select2" name="settled" required>
+                                                 <optgroup label="Wybierz">
+                                                   <% switch(order.settled) { case 'Tak' : %>
+                                                   <option value="Tak" selected>Tak</option>
+                                                   <option value="Nie" >Nie</option>
+                                                   <% break; case 'Nie' : %>
+                                                   <option value="Tak">Tak</option>
+                                                   <option value="Nie" selected>Nie</option>
+                                                   <% break; default: %>
+                                                   <option value="Tak">Tak</option>
+                                                   <option value="Nie">Nie</option>
+                                                   <% break;} %>
+                                             </select>
+                                         </div>
+                                        </div>
+
+                                      </div>
+                                        <div class="col-sm-2 ">
+                                          
+                                          <div class="card row" style="padding: 20px; margin-left: 10px;">
+                                            <h4 class="mt-0 header-title text-center">Powiadomienia</h4> <hr>
+                                            <div class="form-group"> 
+                                              <input id="SMS_from_company" name="SMS_from_company" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.SMS_from_company) { %>checked<% } %>>
+                                              <label for="SMS_from_company"><strong>SMS</strong> do firmy </label>
+                                              <input id="sms_company" name="sms_company" type="text" class="form-control notification_input" value="<%= order.sms_company %>" >
+                                            </div>
+                                            <div class="form-group">
+                                              <input id="EMAIL_from_company" name="EMAIL_from_company" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.EMAIL_from_company) { %>checked<% } %>>
+                                              <label for="EMAIL_from_company"><strong>Email</strong> do firmy </label>
+                                              <input id="email_company" name="email_company" type="text" class="form-control notification_input" value="<%= order.sms_company %>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                              <input id="SMS_from_client" name="SMS_from_client" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.SMS_from_client) { %>checked<% } %>>
+                                              <label for="SMS_from_client"><strong>SMS</strong> do klienta </label>
+                                              <input id="sms_client" name="sms_client" type="text" class="form-control notification_input" value="<%= order.sms_client %>">
+                                            </div>
+                                            <div class="form-group">
+                                              <input id="EMAIL_from_client" name="EMAIL_from_client" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.EMAIL_from_client) { %>checked<% } %>>
+                                              <label for="EMAIL_from_client"><strong>Email</strong> do klienta </label>
+                                              <input id="email_client" name="email_client" type="text" class="form-control notification_input" value="<%= order.email_client %>">
+                                            </div>
+                                            
+                                            
+                                              <% if(order.planned_date.length == 10 && order.planned_time.length >= 5 && order.confirmation_sms_id === ''){ %>
+                                                <button type="button" id="sendSMS" class="btn btn-danger">Wyślij potwierdzenie dostawy SMS</button>  
+                                                
+                                                <%}else if(order.confirmation_sms_id !== ''){%>
+                                                  <button type="button" id="sendSMS" class="btn btn-success">Ponownie wyślij potwierdzenie dostawy SMS</button>  
+                                                
+                                                <%}else{%>
+                                                  <button class="btn btn-secondary" disabled>Wyślij potwierdzenie dostawy SMS</button>  
+                                                <%}%>
+                                                  
+                                 
+                                            
+                                          </div>
+                                          
+                              
+                                    </div>
+                                  </div>
+                                    <div class="row" style="margin-top: 20px">
+                                      
+                                      <div class="col-md-12" style='padding-right: 0;'>
+                                        <div class="card" style="padding: 20px;">
+                                          <div class="row">
+                                            <div class="col-12">
+                                              <h4 class="mt-0 header-title text-center">Edytuj stan magazynowy</h4>
+                                              <p class="text-muted m-b-10 font-14 text-center">Po zaznaczeniu paczki, zmiana jest zapisywana dynamicznie</p>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <table id="datatable" class="table dt-responsive nowrap table-vertical text-center" width="100%" cellspacing="0">
+                                              <thead>
+                                                <tr>
+                                                  <th>Id Produktu</th>
+                                                  <th>Nazwa</th>
+                                                  <th>Ilość paczek</th>
+                                                  <th>Ilość sztuk</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody id="activeOrderList">
+                                                <% if(products.length > 0){ %>
+                                                <% products.forEach((product) => { %>
+                                                  <tr>
+                                                      <th scope="row">#<%= product.product_id.split('-')[0] %></th>
+                                                      <td><%= product.name %></td>
+                                                      <td><%= product.package_amount %></td>
+     
+                                                      <td><%= product.product_amount %></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td class="text-right">  
+                                                      <strong> Aktualizuj liste: </strong> <br>
+                                                      Zaznacz odebrane paczki na magazynie
+                                                    </td>
+                                                    
+                                                    <td colspan="10" class="text-left">  
+                                                      <% product.packages.forEach((element) => { %>
+                                                      <div class="input-group mb-1">
+                                                        <div class="input-group-prepend">
+                                                          <div class="input-group-text">
+                                                            <input type="checkbox" class="package_checkbox" aria-label="<%= element.Id_confirmation %>" value="1" id="package_<%= element.Id_confirmation %>" <% if(element.status == 1){ %> checked <% } %>>
+                                                          </div>
+                                                        </div>
+                                                        <input type="text" class="form-control" value="ID: #<%= element.Id_confirmation.split('-')[0] %>" disabled>
+                                                        <input type="text" class="form-control" value="Paczka: <%= element.package_number %>/<%= product.package_amount %>" disabled>
+                                                        <input type="text" class="form-control" value="Sztuka: <%= element.product_number %>/<%= product.product_amount %>" disabled>
+                                                        <input type="text" class="form-control update_date_<%= element.Id_confirmation %>" value="Aktualizowano: <%= element.update_date.replace('T',' ').split('.')[0] %>" disabled>
+                                                        
+                                                      </div>    
+                                                      <% }) %>                                     
+                                                    </td>
+                                                    <!-- <td colspan="2">
+                                                      button
+                                                    </td> -->
+                                                  </tr>
+                                              <% }) %>
+                                              <% } %>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+
+                                      </div>
+
+
+                                </form>
+
+                                <form action="/wyslij-potwierdzenie" method="POST" id="smsForm">
+                                  <input id="order_id" name="order_id" type="hidden" value="<%= order.order_id %>">
+                                  <input id="customer_name" name="customer_name" type="hidden" value="<%= order.customer_name %>">
+                                  <input id="planned_date" name="planned_date" type="hidden" value="<%= order.planned_date %>" class="form-control">
+                                  <input id="planned_time" name="planned_time" type="hidden" value="<%= order.planned_time %>" class="form-control">
+                                  <input id="customer_phone" name="customer_phone" type="hidden" data-parsley-type="number" value="<%= order.customer_phone %>">
+                                  <input id="products_amount" name="products_amount" type="hidden" value="<%= products.length%>">
+                                  <% if(products.length > 0){ %>
+                                    <% products.forEach((product, index) => { %>
+                                      <input id="product_name<%=index+1%>" name="product_name<%=index+1%>" type="hidden" value="<%= product.name %>">
+                                    <%})%>
+                                  <%}%>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+								</div>					
+<%- contentFor('FooterJs') %>
+
+
+<%- contentFor('BottomJs') %>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#planned_date').datepicker({language: 'pl'});
+
+    $('.package_checkbox').on('change', function(){
+      let package_id = $(this).attr('id').split('_')[1]
+      let status = 0
+      if($(this).is(':checked')) status = 1
+      let data= {
+        order_id: $('#order_id').val(),
+        status: status,
+        Id_confirmation: package_id
+      }
+      console.log(data)
+      $.post( "/aktualizuj-paczke",  data , ( result ) => {
+       
+        let update_date = new Date(); //Date.now()//.toISOString().replace('T',' ').split('.')[0]
+        update_date.setHours( update_date.getHours() + 2 );
+        let date = update_date.toISOString().replace('T',' ').split('.')[0]
+        // console.log(update_date, date)
+        $('.update_date_' + package_id).val('Aktualizowano: ' + date).change()
+        if(result.changed){
+          $('#status_przesylki').val("przygotowane").change();
+          $('#prev_status').val("przygotowane").change();
+        }
+          console.log(result)
+        }, "json");
+    })
+
+    $('#addProductButton').on('click', ()=>{
+      var SaveInMyProducts = $('#SaveInMyProducts').is(":checked")
+      let saveIt = '0'
+      if(SaveInMyProducts) saveIt = '1'
+      var newProduct = {
+            name: $('#name').val(),
+            package_amount: $('#package_amount').val() || 0,
+            weight: $('#weight').val() || 0,
+            width: $('#width').val() || 0,
+            height: $('#height').val() || 0,
+            depth: $('#depth').val() || 0,
+            volume: $('#volume').val() || 0,
+            returnJson: '1',
+            SaveInMyProducts: saveIt
+          }
+        console.log(newProduct)
+        $.post( "/dodaj-produkt",  newProduct , ( data ) => {
+          if(data.product_id !== null){
+            newProduct.product_id = data.product_id
+            newProduct.id = data.product_id.split('-')[0]
+            newProduct.amount = 1
+            product_data[data.product_id] = newProduct
+            addProductToList(data.product_id)
+            closeAddProduct()
+          }
+        }, "json");
+    })
+
+
+    $('#sendOffer').on('click', ()=>{
+      $('#mainform').submit()
+    })
+    $('#sendSMS').on('click', ()=>{
+      console.log("wysyłam SMS")
+      $('#smsForm').submit()
+    })
+
+    $('#AddProduct').on('click', ()=>{
+      $('.add-product-hidden').slideDown("slow")
+    })
+
+
+    $('#activeOrderList').on('click', '.removeProduct', (e)=>{
+       let id = $(e.currentTarget.outerHTML).attr('data')
+       removeProductFromList(id)
+      $('#product-' + id).remove()
+      $('#selectedProduct > option[value="'+id+'"]').show()
+    })
+
+    // Lista posiadanych produktów
+    /* ------------------------------------*/
+    let product_data = []
+
+    /* ------------------------------------ */ 
+    console.log(product_data)
+      $('#SMS_from_company').change(function() {
+        $('#sms_company').toggle()
+      });
+      $('#EMAIL_from_company').change(function() {
+        $('#email_company').toggle()
+      });
+      $('#SMS_from_client').change(function() {
+        $('#sms_client').toggle()
+      });
+      $('#EMAIL_from_client').change(function() {
+        $('#email_client').toggle()
+      });
+
+      <% if(order.SMS_from_company) { %>$('#sms_company').toggle()<% } %>
+      <% if(order.EMAIL_from_company) { %>$('#email_company').toggle()<% } %>
+      <% if(order.SMS_from_client) { %>$('#sms_client').toggle()<% } %>
+      <% if(order.EMAIL_from_client) { %>$('#email_client').toggle()<% } %>
+
+     
+
+      $('.buttonSubmit').parsley().on('click', function() {
+        console.log('test');
+        var ok = $('.parsley-error').length === 0;
+        $('.bs-callout-info').toggleClass('hidden', !ok);
+        $('.bs-callout-warning').toggleClass('hidden', ok);
+      })
+      .on('form:submit', function() {
+        return false; // Don't submit form for this demo
+      });
+
+
+			$('#customer_phone').on('keyup', function() {
+				$('#sms_client').val($(this).val())
+			})
+
+      
+      if($('#platnosc').val() == 'Opłacone'){
+        $('#price').prop('disabled', true);
+      }
+
+      $('#platnosc').on('change', ()=>{
+        
+        switch($('#platnosc').val()){
+          case 'Pobranie': 
+            $('#price').prop('disabled', false);
+            break;
+
+          case 'Opłacone':
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+          default:
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+        }
+      })
+
+})
+</script>

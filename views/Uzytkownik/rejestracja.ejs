@@ -1,0 +1,110 @@
+<% include ../Partials/HeaderRoot %>
+
+    <!-- Loader -->
+    <div id="preloader">
+        <div id="status">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- Begin page -->
+    <div class="accountbg"></div>
+    <div class="wrapper-page" style="max-width: 880px;">
+
+        <div class="card">
+            <div class="card-body">
+
+                <h3 class="text-center m-0">
+                    <a href="/" class="logo logo-admin"><img src="public/assets/images/logo.png" height="30"
+                            alt="logo"></a>
+                </h3>
+
+                <div class="p-3">
+                    <h4 class="font-18 m-b-5 text-center">Rejestracja</h4>
+                    <p class="text-muted text-center">Zarejestruj się w systemie Verniro Transport</p>
+                    <% if(error != false){ %>
+                        <div class="alert alert-danger alert-dismissible mb-0 show\\" role="alert">
+                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                 <span aria-hidden="true">×</span>
+                             </button>
+                            <%= error %>
+                       </div>
+                       <% } %>
+                    <form class="form-horizontal m-t-30" action="rejestracja" method="post"
+                        enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+
+
+                                <div class="form-group">
+                                    <label for="name">Imie</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        placeholder="Wpisz imie">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="surname">Nazwisko</label>
+                                    <input type="text" class="form-control" id="surname" name="surname"
+                                        placeholder="Wpisz nazwisko">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Dodaj logo</label>
+                                    <input type="file" class="filestyle" name="logo" data-buttonname="btn-secondary"
+                                        id="filestyle-0" tabindex="-1"
+                                        style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" accept="image/*">
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label for="useremail">* E-mail</label>
+                                    <input type="email" class="form-control" id="useremail" name="email"
+                                        placeholder="Wpisz e-mail" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="username">* Nazwa użytkownika</label>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                        placeholder="Wpisz nazwę użytkownika" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="userpassword">* Hasło</label>
+                                    <input type="password" class="form-control" id="userpassword" name="password"
+                                        placeholder="Wpisz hasło" required>
+                                </div>
+
+                                <div class="form-group row m-t-20">
+                                    <div class="col-12 text-right">
+                                        <button class="btn btn-primary w-md waves-effect waves-light"
+                                            type="submit">Dalej</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-t-10 mb-0 row">
+                            <div class="col-12 m-t-20">
+                                <p class="font-14 text-muted mb-0"> Pola oznaczone * są wymagane <br> Rejestrując się
+                                    zgadzasz się z <a href="#">regulaminem Verniro</a></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="m-t-40 text-center">
+            <p class="text-white">Masz już konto? <a href="pages-login"
+                    class="font-500 font-14 text-white font-secondary"> Zaloguj się </a> </p>
+            <p class="text-white">© <%= new Date().getFullYear() - 1; %> - <%= new Date().getFullYear(); %> Verniro.
+                        stworzone przez <i class="mdi mdi-heart text-danger"></i> <a href="https://mayam.pl" style="color:white; text-weight: bold;">Mayam</a></p>
+        </div>
+
+    </div>
+
+    <% include ../Partials/FooterRoot %>

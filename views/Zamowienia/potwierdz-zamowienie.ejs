@@ -1,0 +1,205 @@
+<%- contentFor('HeaderCss') %>
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+<div class="row fullsite">
+    <div class="col-md-3 dataOrder">
+      <input id="full_adress" name="full_adress" type="hidden" class="form-control" value="<%= data.address %>" readonly="readonly">
+      <form  action="/potwierdz-zamowienie" method="post">
+      <input type="hidden" id="additional_info" name="additional_info" value="<%= data.additional_info %>">
+      <input type="hidden" id="bringing" name="bringing" value="<%= data.bringing %>">
+      <input type="hidden" id="direction" name="direction" value="<%= data.direction %>">
+      <div class="row">
+        <div class="col-12 pt-4">
+          <div class="form-group">
+              <label for="customer_name">Nazwa Odbiorcy</label>
+              <input id="customer_name" name="customer_name" type="text" class="form-control" value="<%= data.customer_name %>"  readonly="readonly" required>
+          </div>
+          <div class="row">
+            <div class="form-group col-lg-8">
+              <label for="city">Miejscowość</label>
+              <input id="city" name="city" type="text" class="form-control" value="<%= data.city %>" readonly="readonly" required>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="postal_code">Kod pocztowy</label>
+              <input id="postal_code" name="postal_code" type="text" class="form-control" value="<%= data.postal_code %>" readonly="readonly" required>
+            </div>
+
+          </div>
+          <div class="form-group">
+              <label for="street">Ulica</label>
+              <input id="street" name="street" type="text" class="form-control" value="<%= data.street %>" readonly="readonly" required>
+          </div>
+          <div class="form-group">
+              <label for="customer_phone">Numer telefonu</label>
+              <input id="customer_phone" name="customer_phone" type="text" class="form-control" value="<%= data.customer_phone %>" readonly="readonly" required>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="house_number">Numer domu</label>
+              <input id="house_number" name="house_number" type="text" class="form-control" value="<%= data.house_number %>" readonly="readonly" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="apartment_number">Mieszkanie</label>
+              <input id="apartment_numbe " name="apartment_number" type="text" class="form-control" value="<%= data.apartment_number %>" readonly="readonly"> 
+            </div>
+          </div>
+          <div class="row przedmioty-dw-nw">
+              <input type="hidden" value="<%= data.productJSON %>" name="productJSON"> 
+              <div class="col-10">Przedmioty do wysłania</div><div class="col-2 ilosc-produktow-nw text-center"> Ilość</div>
+              <% if(data.products !== null){ %>
+                <ul class="list-group col-12 lista-produktow-nw">
+                <% data.products.forEach((product) => { %>
+                  
+                    <li class="list-group-item">
+                      <%= product.name %>
+                      <span class="ilosc-lista-nw text-right"><%= product.amount %></span>
+                    </li>
+                <% }) %>
+                </ul>
+              <% } else {%>
+                <ul class="list-group col-12 lista-produktow-nw">
+                      <li class="list-group-item text-center">
+                        Brak dodanych produktów
+                      </li>
+                  </ul>
+              <% } %>
+          </div>
+          <div class="row">
+            <div class="form-group col-6">
+              <label class="control-label">Forma płatności</label>
+              <select class="form-control select2 payment_type" name="payment" readonly="readonly">
+                <% if(data.payment == "Opłacone"){ %>
+                <option value="Opłacone" selected>Opłacone</option>
+                <option value="Pobranie">Pobranie</option>
+                <% } else { %>
+                <option value="Opłacone" >Opłacone</option>
+                <option value="Pobranie" selected>Pobranie</option>
+                <% } %>
+              </select>
+            </div>
+            <div class="form-group col-6">
+              <label for="price">Kwota</label>
+              <input id="price" name="price" type="text" class="form-control" value="<%= data.price %>" readonly="readonly">
+            </div>
+          </div>
+					
+					<div class="card-body" style="display: none">
+						<div class="form-group">
+							<input id="SMS_from_company" name="SMS_from_company" type="checkbox" class="form-control checkbox-style" <% if(data.SMS_from_company){ %>	checked <% } %>>
+							<label for="SMS_from_company">Powiadomienia do firmy - <strong>SMS</strong></label>
+							<input id="sms_company" name="sms_company" type="text" class="form-control notification" value="<%= data.sms_company %>" >
+						</div>
+						<div class="form-group">
+							<input id="EMAIL_from_company" name="EMAIL_from_company" type="checkbox" class="form-control checkbox-style" <% if(data.EMAIL_from_company){ %>	checked <% } %>>
+							<label for="EMAIL_from_company">Powiadomienia do firmy - <strong>EMAIL</strong></label>
+							<input id="email_company" name="email_company" type="text" class="form-control notification" value="<%= data.email_company %>">
+						</div>
+						<div class="form-group">
+							<input id="SMS_from_client" name="SMS_from_client" type="checkbox" class="form-control checkbox-style" <% if(data.SMS_from_client){ %>	checked <% } %>>
+							<label for="SMS_from_client">Powiadomienia do ostatecznego klienta - <strong>SMS</strong></label>
+							<input id="sms_client" name="sms_client" type="text" class="form-control notification" value="<%= data.sms_client %>">
+						</div>
+						<div class="form-group">
+							<input id="EMAIL_from_client" name="EMAIL_from_client" type="checkbox" class="form-control checkbox-style" <% if(data.EMAIL_from_client){ %>	checked <% } %>>
+							<label for="EMAIL_from_client">Powiadomienia do ostatecznego klienta - <strong>EMAIL</strong></label>
+							<input id="email_client" name="email_client" type="text" class="form-control notification" value="<%= data.email_client %>">
+						</div>
+					</div>
+
+          <div class="row">
+            <div class="col-4">
+              <button type="button" class="btn btn-warning waves-effect waves-light" id="EditData">Edytuj dane</button>
+
+            </div>
+            <div class="col-8">
+              <button type="button" class="btn btn-primary waves-effect waves-light float-right saveChanges" style="display: none">Zapisz zmiany</button>
+              <button type="submit" class="btn btn-primary waves-effect waves-light float-right confirmButton">Zatwierdź</button>
+            </div>
+          </div>
+        </div>
+      </div>
+		</form>
+    </div>
+    <div class="col-md-9 mapOrder">
+
+      <iframe
+        width="100%"
+        height="100%"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        src="<%= data.map_link %>">
+      </iframe>
+
+        <div class="notFoundMap">
+            <div class="row">
+              <div class="col-12">
+                  <h2>Nie znaleziono lokalizacji na mapie</h2>
+                  <span>Jeśli podałeś prawidłowy adres zatwierdź zamówienie, w innym przypadku edytuj adres</span>
+              </div>
+            </div>
+          </div>
+
+
+</div>
+
+
+
+<%- contentFor('FooterJs') %>
+
+<%- contentFor('BottomJs') %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      jQuery.fx.off = true
+
+
+      $('.saveChanges').on('click', function(){
+        $('form').attr('action', '/nowe-zamowienie')
+        $('form').submit()
+      })
+
+      $('#EditData').on('click', function() {
+        $('.saveChanges').toggle('display')
+        $('.confirmButton').toggle('display')
+        $('form').attr('action', '/potwierdz-zamowienie')
+        $('.form-control').each(function () {
+          if($(this).attr('readonly') == 'readonly' ){
+            $(this).attr('readonly', false)
+          } else {
+            $(this).attr('readonly', true)
+          }
+        })
+        let payment_status = $('.payment_type').is(":disabled")
+        $('.payment_type').prop('disabled', payment_status);
+      })
+
+
+      function doGeocode() {
+        var addr = document.getElementById("address");
+        // Get geocoder instance
+        var geocoder = new google.maps.Geocoder();
+
+        // Geocode the address
+        geocoder.geocode({
+          'address': addr.value
+        }, function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+
+            // set it to the correct, formatted address if it's valid
+            addr.value = results[0].formatted_address;;
+
+            // show an error if it's not
+          } else alert("Invalid address");
+        });
+      };
+
+      // END
+    });
+  </script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLrSjT08HLyBz7Y7ehpX-rhxK9-x9PHR8&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>

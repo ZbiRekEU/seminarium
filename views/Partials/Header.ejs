@@ -1,0 +1,151 @@
+<header id="topnav">
+
+    <!-- MENU Start -->
+    <div class="navbar-custom">
+        <div class="container-fluid">
+          <!-- Logo container-->
+          <div class="menu-extras topbar-custom d-lg-none ">
+            <a href="/" class="logo">
+              <img src="public/assets/images/logo-white.png" alt="" height="60">
+            </a>
+              <ul class="list-inline float-right mb-0">
+                  <!-- notification-->
+
+                  <!-- User-->
+                  <li class="list-inline-item dropdown notification-list">
+                      <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
+                         aria-haspopup="false" aria-expanded="false">
+                          <img src="public/images/<%= locals.avatar %>" alt="user" class="rounded-circle">
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                          <!-- <a class="dropdown-item" href="#"><i class="dripicons-user text-muted"></i> Mój profil</a> -->
+                          <a class="dropdown-item" href="#"><span class="badge badge-success pull-right m-t-5">5</span><i class="dripicons-gear text-muted"></i> Mój profil</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#"><i class="dripicons-exit text-muted"></i> Wyloguj</a>
+                      </div>
+                  </li>
+                  <li class="menu-item list-inline-item">
+                      <!-- Mobile menu toggle-->
+                      <a class="navbar-toggle nav-link">
+                          <div class="lines">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                          </div>
+                      </a>
+                      <!-- End mobile menu toggle-->
+                  </li>
+
+              </ul>
+          </div>
+          <!-- end menu-extras -->
+
+          <div class="clearfix"></div>
+            <div id="navigation">
+                <!-- Navigation Menu-->
+                <ul class="navigation-menu">
+                  <a href="/" class="logo d-none d-lg-inline ">
+                    <img src="public/assets/images/logo-white.png" alt="" height="60" style="margin-right: 40px;">
+                  </a>
+                    <% if(locals.type == "admin"){ %>
+                    <li class="has-submenu">
+                        <a href="/" style="padding: 20px 15px !important"><i class="mdi mdi-view-dashboard"></i> Kokpit </a>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a href="/wszystkie-zamowienia" style="padding: 20px 15px !important"><i class="mdi mdi-buffer"></i>Wszystkie Zamówienia</a>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a href="/moje-zamowienia" style="padding: 20px 15px !important"><i class="mdi mdi-buffer"></i>Moje Zamówienia</a>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a href="/nowe-zamowienie" style="padding: 20px 15px !important"><i class="mdi mdi-cube-outline"></i>Nowe Zamówienie</a>
+                    </li>
+
+                    <li class="has-submenu">
+                      <a href="/moje-produkty" style="padding: 20px 15px !important"><i class="mdi mdi-cube-outline"></i>Moje Produkty</a>
+                  </li>
+
+                    <li class="has-submenu">
+                      <a href="/odbiory" style="padding: 20px 15px !important"><i class="mdi mdi-cube-outline"></i>Odbiory</a>
+                  </li>
+
+                    <li class="has-submenu">
+                        <a href="/wszyscy-uzytkownicy" style="padding: 20px 15px !important"><i class="mdi mdi-cube-outline"></i>Użytkownicy</a>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a href="/moj-profil" style="padding: 20px 15px !important"><i class="mdi mdi-google-pages"></i>Mój profil</a>
+                    </li>
+                    <% } else { %>
+
+                      <li class="has-submenu" >
+                          <a href="/moje-zamowienia"><i class="mdi mdi-buffer"></i>Moje Zamówienia</a>
+                      </li>
+
+                      <li class="has-submenu">
+                          <a href="/nowe-zamowienie"><i class="mdi mdi-cube-outline"></i>Nowe Zamówienie</a>
+                      </li>
+
+                      <li class="has-submenu">
+                         <a href="/moje-produkty"><i class="mdi mdi-cube-outline"></i>Moje Produkty</a>
+                      </li>
+                      <li class="has-submenu">
+                         <a href="/odbior-od-producenta"><i class="mdi mdi-cube-outline"></i>Zleć odbiór od producenta</a>
+                      </li>
+
+                      <li class="has-submenu">
+                          <a href="/moj-profil"><i class="mdi mdi-google-pages"></i>Mój Profil</a>
+                      </li>
+                    <% } %>
+
+
+
+                      <ul class="list-inline float-right mb-0">
+
+                        <!-- Fullscreen -->
+                        <li class="list-inline-item dropdown notification-list hide-phone">
+                          <a class="nav-link waves-effect" href="#" id="btn-fullscreen" style="margin-top: -5px;">
+                            <i class="mdi mdi-fullscreen noti-icon"></i>
+                          </a>
+                        </li>
+
+
+
+                      </li>
+                      <!-- User-->
+                      <li class="list-inline-item dropdown notification-list d-none d-lg-inline">
+                        <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false" style="margin-top: -10px;">
+                        <img src="public/images/<%= locals.avatar %>" alt="user" class="rounded-circle">
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <!-- <a class="dropdown-item" href="/moj-profil"><i class="dripicons-user text-muted"></i> Mój profil</a> -->
+                        <a class="dropdown-item" href="/moj-profil"><i class="dripicons-gear text-muted"></i> Mój profil</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/wyloguj"><i class="dripicons-exit text-muted"></i> Wyloguj</a>
+                      </div>
+                    </li>
+                    <li class="menu-item list-inline-item" >
+                      <!-- Mobile menu toggle-->
+                      <a class="navbar-toggle nav-link">
+                        <div class="lines">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                      </a>
+                      <!-- End mobile menu toggle-->
+                    </li>
+
+                  </ul>
+
+                </ul>
+
+                <!-- End navigation menu -->
+            </div> <!-- end #navigation -->
+        </div> <!-- end container -->
+    </div> <!-- end navbar-custom -->
+</header>

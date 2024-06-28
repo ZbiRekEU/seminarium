@@ -1,0 +1,398 @@
+<%- contentFor('HeaderCss') %>
+  <!-- DataTables -->
+  <link href="public/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+  <!-- Responsive datatable examples -->
+  <link href="public/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+
+
+  <%- contentFor('breadcrumb') %>
+
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-title-box">
+          <div class="btn-group pull-right">
+            <span style="display: flex; align-items: center;z-index: 1;">Wyszukaj: <input style="margin-left: 7px;"
+                id="wyszukaj" type="text" class="form-control" placeholder="ID zamówienia.."></span>
+          </div>
+          <h4 class="page-title">Lista produktów</h4>
+        </div>
+      </div>
+    </div>
+
+    <%- contentFor('body') %>
+      <% if(error==null){ %>
+        <% products.forEach((product)=> { %>
+          <form action="/edytuj-produkt" method="post" class="absoluteForm">
+            <div class="edit-order-background edit-product-hidden edit-product-<%= product.product_id %>">
+              <div class="order-edit-header">
+                <div class="row">
+                  <div class="col-3">
+
+                  </div>
+                  <div class="col-6" style="text-align: center;">
+                    Edytuj produkt
+                  </div>
+                  <div class="col-3" style="text-align: right">
+                    <button type="button" class="close" onclick="closeEditProduct('<%= product.product_id %>')"
+                      aria-label="Zamknij" style="color:white;">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="addProductForm">
+                <br>
+                <form action="/edytuj-produkt" method="POST"></form>
+                <input type="hidden" name="product_id" id="product_id" value="<%= product.product_id %>">
+
+                <div class="row">
+                  <div class="col-2"></div>
+                  <div class="form-group col-md-4">
+                    <label for="name">Nazwa:</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>"></input>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label for="amount">Ilość sztuk:</label>
+                    <input type="number" class="form-control" id="amount" name="amount"
+                      value="<%= product.amount %>"></input>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label for="package_amount">Ilość paczek:</label>
+                    <input type="number" class="form-control" id="package_amount_input<%=product.product_id%>"
+                      name="package_amount" value="<%= product.package_amount %>"
+                      oninput="generateEditInputs('<%= product.product_id %>')"></input>
+                  </div>
+                  <div class="col-2"></div>
+                </div>
+
+
+                <div id="editInputContainer<%=product.product_id%>"
+                  style="max-height: 60vh; overflow-y: auto; overflow-x: hidden;"></div>
+
+
+
+                <div class="row">
+                  <div class="col-8"></div>
+                  <div class="col-2" style="text-align: right;">
+                    <button type="submit" class="btn btn-dark">Dodaj produkt</button>
+                  </div>
+                  <div class="col-2"></div>
+                </div> <br>
+          </form>
+          </div>
+          </div>
+          </form>
+          <% }) %>
+            <% } %>
+              <form action="/dodaj-produkt" method="post" class="absoluteForm">
+                <div class="edit-order-background add-product-hidden ">
+                  <div class="order-edit-header">
+                    <div class="row">
+                      <div class="col-3">
+
+                      </div>
+                      <div class="col-6" style="text-align: center;">
+                        Dodaj nowy produkt
+                      </div>
+                      <div class="col-3" style="text-align: right">
+                        <button type="button" class="close" onclick="closeAddProduct()" aria-label="Zamknij"
+                          style="color:white;">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="addProductForm">
+                    <br>
+                    <form action="/dodaj-produkt" method="POST"></form>
+                    <div class="row">
+                      <div class="col-2"></div>
+                      <div class="form-group col-md-4">
+                        <label for="name">Nazwa:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="amount">Ilość sztuk:</label>
+                        <input type="number" class="form-control" id="amount" name="amount" value="1"></input>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="package_amount">Ilość paczek:</label>
+                        <input type="number" class="form-control" id="package_amount_input" name="package_amount"
+                          oninput="generujInputy()" value="1"></input>
+                      </div>
+                      <div class="col-2"></div>
+                    </div>
+                    <div id="inputContainer" style="max-height: 60vh; overflow-y: auto; overflow-x: hidden;"></div>
+
+
+                    <div class="row">
+                      <div class="col-8"></div>
+                      <div class="col-2" style="text-align: right;">
+                        <button type="submit" class="btn btn-dark">Dodaj produkt</button>
+                      </div>
+                      <div class="col-2"></div>
+                    </div> <br>
+              </form>
+              </div>
+              </div>
+              </form>
+              <div class="row">
+
+                <div class="col-12">
+                  <% if(error==null){ %>
+                    <div class="card m-b-20">
+                      <div class="card-body">
+
+                        <form class="edit_order" action="edytuj-zamowinie" method="post">
+                          <table id="datatable" class="table  dt-responsive nowrap table-vertical" width="100%"
+                            cellspacing="0">
+                            <thead>
+                              <tr>
+                                <th>Id Produktu</th>
+                                <th>Nazwa</th>
+                                <th>Ilość paczek</th>
+                                <th>Szerokość</th>
+                                <th>Wysokość</th>
+                                <th>Głębokość</th>
+                                <th>Objętość</th>
+                                <th>Waga</th>
+                                <th style="padding: 0 0 5px 4px;"><button type="button" class="btn btn-dark"
+                                    id="AddProduct">Dodaj nowy</button></th>
+                              </tr>
+                            </thead>
+                            <tbody id="lista">
+
+                              <% products.forEach((product)=> { %>
+
+                                <tr class="product-<%= product.id %>" id="pokaz-<%= product.product_id %>">
+                                  <td>
+                                    #<%= product.id %>
+                                  </td>
+                                  <td>
+                                    <%= product.name %>
+                                  </td>
+                                  <td>
+                                    <%= product.package_amount %>
+                                  </td>
+                                  <td>
+                                    <%= product.width %> cm
+                                  </td>
+                                  <td>
+                                    <%= product.height %> cm
+                                  </td>
+                                  <td>
+                                    <%= product.depth %> cm
+                                  </td>
+                                  <td>
+                                    <%= product.volume %> m3
+                                  </td>
+                                  <td>
+                                    <%= product.weight %> kg
+                                  </td>
+                                  <td style="padding-top: 0; padding-bottom:0; font-size: 2rem;">
+                                    <a onclick="editProduct('<%= product.product_id %>'); generateEditInputs('<%= product.product_id %>');"
+                                      href="javascript:void(0);" class="m-r-20 text-muted" data-toggle="tooltip"
+                                      data-placement="top" title="" data-original-title="Edytuj dane produktu"><i
+                                        class="fa fa-cog" aria-hidden="true"></i></a>
+                                    <a href="/usun-produkt?id=<%= product.product_id %>" class="m-r-20 text-muted"
+                                      data-toggle="tooltip" data-placement="top" title=""
+                                      data-original-title="Usuń produkt"><i class="mdi mdi-delete font-24"></i></a>
+                                  </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                          </table>
+                        </form>
+
+                      </div>
+                    </div>
+                    <% } else { %>
+                      <div class="text-center">
+                        <h2>Nie znaleziono produktów</h2>
+                        <button id="AddProduct" class="btn btn-dark">Dodaj produkt</button>
+                      </div>
+                      <% } %>
+                </div>
+              </div>
+
+
+              <%- contentFor('FooterJs') %>
+                <!-- Datatable js -->
+                <script src="public/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+                <script src="public/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+                <!-- Responsive examples -->
+                <script src="public/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+                <script src="public/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                  crossorigin="anonymous">
+                  </script>
+                <script src="jquery.qrcode.min.js"></script>
+
+                <%- contentFor('BottomJs') %>
+                  <script type="text/javascript">
+                    $(document).ready(function () {
+						generujInputy()
+                      $('#AddProduct').on('click', () => {
+                        $('.add-product-hidden').slideDown("slow")
+                      })
+                    });
+                    function editProduct(id) {
+                      console.log($('.edit-product-' + id))
+                      $('.edit-product-' + id).slideDown("slow")
+                    }
+                    function closeAddProduct(id) {
+                      $('.add-product-hidden').hide()
+                    }
+                    function closeEditProduct(id) {
+                      $('.edit-product-' + id).hide()
+                    }
+
+                  </script>
+
+                  <script>
+                    $(document).ready(function () {
+                      $("#wyszukaj").on("keyup", function () {
+                        var value = $(this).val().toLowerCase();
+                        $("#lista tr").filter(function () {
+                          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                        });
+                      });
+
+                    });
+                  </script>
+
+                  <style>
+                    .paging-nav {
+                      text-align: right;
+                      padding-top: 2px;
+                    }
+
+                    .paging-nav a {
+                      margin: auto 1px;
+                      text-decoration: none;
+                      display: inline-block;
+                      padding: 1px 7px;
+                      background: #91b9e6;
+                      color: white;
+                      border-radius: 3px;
+                    }
+
+                    .paging-nav .selected-page {
+                      background: #187ed5;
+                      font-weight: bold;
+                    }
+
+                    .paging-nav,
+                    #tableData {
+                      margin: 0 auto;
+                      font-family: Arial, sans-serif;
+                    }
+                  </style>
+
+                  <script type="text/javascript"
+                    src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+                  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+                  <script type="text/javascript" src="public/assets/plugins/datatables/paging.js"></script>
+                  <script>
+                    $(document).ready(function () {
+                      $('#datatable').paging({ limit: 20 });
+                    })
+                  </script>
+
+                  <script>
+                    function generujInputy() {
+                      var liczba = document.getElementById("package_amount_input").value;
+                      var container = document.getElementById("inputContainer");
+
+                      // Wyczyszczenie poprzedniej zawartości
+                      container.innerHTML = "";
+
+                      // Generowanie inputów
+                      for (var i = 0; i < liczba; i++) {
+                        var div = document.createElement("div");
+                        div.className = "row";
+                        div.innerHTML = `
+              <div class="col-2"></div>
+                <div class="col-8 border p-3">
+                  <div class="row">
+                  <div class="col-3 d-flex align-items-center">
+                    <h6 style="margin: 0 auto;" >Paczka ${i + 1}</h6>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="width${i + 1}">Szerokość w cm:</label>
+                    <input type="number" class="form-control" id="width${i + 1}" name="width${i + 1}"></input>
+                    <label for="height${i + 1}">Wysokość w cm:</label>
+                    <input type="number" class="form-control" id="height${i + 1}" name="height${i + 1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="depth${i + 1}">Głębokość w cm:</label>
+                    <input type="number" class="form-control" id="depth${i + 1}" name="depth${i + 1}"></input>
+                    <label for="volume${i + 1}">Objętość w m3:</label>
+                    <input type="number" class="form-control" id="volume${i + 1}" name="volume${i + 1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="weight${i + 1}">Waga w kg:</label>
+                    <input type="number" class="form-control" id="weight${i + 1}" name="weight${i + 1}"></input>
+                  </div>
+                </div>
+                </div>
+              `
+                        container.appendChild(div);
+                      }
+                    }
+
+
+                    function generateEditInputs(prod_id) {
+                      var liczba = document.getElementById(`package_amount_input${prod_id}`).value;
+
+                      var container = document.getElementById(`editInputContainer${prod_id}`);
+                      let products = JSON.parse('<%-JSON.stringify(products)%>')
+                      // Wyczyszczenie poprzedniej zawartości
+
+                      let product = products.filter(product => {
+                        return product.product_id === prod_id
+                      })
+                      container.innerHTML = "";
+
+                      // Generowanie inputów
+                      for (var i = 0; i < liczba; i++) {
+                        var div = document.createElement("div");
+                        div.className = "row";
+                        div.innerHTML = `
+              <div class="col-2"></div>
+                <div class="col-8 border p-3">
+                  <div class="row">
+                  <div class="col-3 d-flex align-items-center">
+                    <h6 style="margin: 0 auto;" >Paczka ${i + 1}</h6>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="width${i + 1}">Szerokość w cm:</label>
+                    <input type="number" class="form-control" id="width${i + 1}" name="width${i + 1}" value="${product[0].packages[i] ? product[0].packages[i].width : ''}"></input>
+                    <label for="height${i + 1}">Wysokość w cm:</label>
+                    <input type="number" class="form-control" id="height${i + 1}" name="height${i + 1}" value="${product[0].packages[i] ? product[0].packages[i].height : ''}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="depth${i + 1}">Głębokość w cm:</label>
+                    <input type="number" class="form-control" id="depth${i + 1}" name="depth${i + 1}" value="${product[0].packages[i] ? product[0].packages[i].depth : ''}"></input>
+                    <label for="volume${i + 1}">Objętość w m3:</label>
+                    <input type="number" class="form-control" id="volume${i + 1}" name="volume${i + 1}" value="${product[0].packages[i] ? product[0].packages[i].volume : ''}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="weight${i + 1}">Waga w kg:</label>
+                    <input type="number" class="form-control" id="weight${i + 1}" name="weight${i + 1}" value="${product[0].packages[i] ? product[0].packages[i].weight : ''}"></input>
+                  </div>
+                </div>
+                </div>
+              `
+                        container.appendChild(div);
+                      }
+                    }
+                  </script>

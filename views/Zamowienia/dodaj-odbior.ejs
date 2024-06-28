@@ -1,0 +1,427 @@
+<%- contentFor('HeaderCss') %>
+  <link href="public/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<%- contentFor('breadcrumb') %>
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item"><a href="/moje-zamowienia">Odbiory</a></li>
+                      <li class="breadcrumb-item active">Dodaj nowy</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">Nowy odbiór od producenta</h4>
+          </div>
+      </div>
+  </div>
+
+<%- contentFor('body') %>
+  <form action="/dodaj-produkt" method="post" class="absoluteForm">
+    <div class="edit-order-background add-product-hidden ">
+        <div class="order-edit-header">
+          <div class="row">
+            <div class="col-3">
+
+            </div>
+            <div class="col-6" style="text-align: center;">
+              Dodaj nowy produkt
+            </div>
+            <div class="col-3" style="text-align: right">
+              <button type="button" class="close" id="closeAddProduct" aria-label="Zamknij" style="color:white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="addProductForm">
+          <br>
+          <div class="row">
+            <div class="col-2"></div>
+            <div class="form-group col-md-4">
+              <label for="name">Nazwa:</label>
+              <input type="text" class="form-control" id="name" name="name"></input>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="package_amount">Ilość paczek:</label>
+              <input type="number" class="form-control" id="package_amount_input" name="package_amount"></input>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="amount">Ilość sztuk:</label>
+              <input type="number" class="form-control" id="amount" name="amount"></input>
+            </div>
+            <div class="col-2"></div>
+          </div>
+
+          
+
+          <div class="row">
+            <div class="col-8"></div>
+            <div class="col-2" style="text-align: right;">
+              <button type="button" id="addProductButton" class="btn btn-dark">Dodaj produkt</button>
+            </div>
+            <div class="col-2"></div>
+          </div> <br>
+          </form>
+        </div>
+    </div>
+  </form>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+
+                              <div class="row">
+                                <div class="col-6">
+                                  <h4 class="mt-0 header-title">Zamów odbiór mebli od producenta</h4>
+                                  <p class="text-muted font-14">Wypełnij wszystkie pola poniżej</p>
+                                  <p class="text-muted m-b-30 font-14">Odbiór od producenta zgodnie z cennikiem jest dodatkowo płatny</p>
+                                </div>
+                                <div class="col-6">
+                                  <button type="submit" id="sendOffer" class="btn btn-success waves-effect waves-light buttonSubmit col-4 float-right" value="validate" style="margin: 10px -10px 0px;">Wyślij do realizacji</button>
+                                </div>
+                              </div>
+
+
+                                <form action="/dodaj-odbior" method="post" id="mainform">
+                                  <input type="hidden" name="productJSON" id="productList" value="" />
+                                    <div class="row">
+                                      <div class="col-sm-12 card " style="padding-top: 5px;">
+                                        <div class="row">
+                                          
+                                          <div class="col-sm-4">
+                                            <div class="form-group">
+                                              <label for="producer_name">Nazwa producenta</label>
+                                              <input id="producer_name" name="producer_name" type="text" class="form-control" required>
+                                            </div>
+                                          </div>
+                                            
+                                            <div class="col-lg-3 ">
+                                              <div class="form-group">
+                                                <label for="producer_adress">Adres odbioru (opcjonalnie)</label>
+                                                <input id="producer_address" name="producer_address" type="text" class="form-control" required >
+                                              </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                              <div class="form-group">
+                                                <label for="collectionNumber">Numer trasy/Numer odbioru</label>
+                                                <input id="collectionNumber" name="collectionNumber" type="text" class="form-control" required>
+                                              </div>
+                                            </div>
+                                        </div>
+                                          
+                                        <div class="row">
+
+                                          <div class="col-sm-4">
+                                            <div class="form-group">
+                                              <label for="additional_info">Dodatkowe informacje</label>
+                                              <input id="additional_info" name="additional_info" type="text" class="form-control" required>
+                                            </div>
+                                          </div>
+
+                                           
+                                        </div>
+                                        
+                                      </div>
+                                       
+                                  </div>
+                                    <div class="row" style="margin-top: 20px">
+                                      
+                                      <div class="col-md-4" style='padding-left: 0;'>
+                                        <div class="card" style="padding: 20px;">
+                                          <div class="row " >
+                                            <div class="col-7">
+                                              <h4 class="mt-0 header-title">Dodaj produkty do odbioru</h4>
+                                              <p class="text-muted m-b-30 font-14">Wybierz produkty z listy lub dodaj nowy</p>
+                                            </div>
+                                            <div class="col-5" style="padding-right: 0;">
+                                              <button type="button" id="AddProduct" class="btn btn-success waves-effect waves-light buttonSubmit  float-right" value="validate">Utwórz nowy produkt</button>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <div class="input-group">
+                                              <select class="custom-select" id="selectedProduct" style="margin-left: 10px;" <% if(products == null){ %> disabled <% } %>>
+                                                <% if(products !== null){ %>
+                                                <option value="defaultSelected" selected>Wybierz produkty z listy...</option>
+                                                  <% products.forEach((product) => { %>
+                                                    <option value="<%= product.product_id %>"><%= product.name %></option>
+                                                  <% }) %>
+                                                <% } else {%>
+                                                  <option selected>Brak dodanych produktów</option>
+                                                <% } %>
+                                              </select>
+                                              <div class="input-group-append">
+                                                <button id="AddProductToOrder" class="btn btn-outline-secondary" type="button" <% if(products == null){ %> disabled <% } %>>Dodaj produkt</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                       </div>
+                                      </div>
+                                      <div class="col-md-8" style='padding-right: 0;'>
+                                        <div class="card" style="padding: 20px;">
+                                          <div class="row">
+                                            <div class="col-12">
+                                              <h4 class="mt-0 header-title text-center">Twoje zlecenie odbioru od producenta</h4>
+                                              <p class="text-muted m-b-10 font-14 text-center">Sprawdź poprawność zanim przejdziesz dalej</p>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <table id="datatable" class="table dt-responsive nowrap table-vertical text-center" width="100%" cellspacing="0">
+                                              <thead>
+                                                <tr>
+                                                  <th>Id Produktu</th>
+                                                  <th>Nazwa</th>
+                                                  <th>Ilość paczek</th>
+                                                  <th class="col-1">Ilość</th>
+                                                  <th>Usuń</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody id="activeOrderList">
+                                                
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+
+                                      </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+								</div>					
+<%- contentFor('FooterJs') %>
+
+
+<%- contentFor('BottomJs') %>
+<script type="text/javascript">
+  $(document).ready(function(){
+    
+    let product_list = []
+
+    function addProductToList(id){
+      if(id == null) return console.log('Nie wybrano przedmiotu')
+      product_list.push(product_data[id])
+      let d = product_data[id]
+      let row = '<tr id="product-'+d.product_id+'"> <td>#'+ d.id +' <input type="hidden"  name="product_id" value="'+id+'"> </td><td>'+ d.name +'</td><td>'+ d.package_amount +'</td> <td ><input type="number" id="product_amount" name="product_amount" product_id="'+d.product_id+'" value="1" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></td> <td style="margin: 0 auto;"><button type="button" style="float: initial; font-size: 2rem;" class="close removeProduct" data="'+id+'" aria-label="Usuń z zamówienia"> <span aria-hidden="true">&times;</span> </button></td> </tr>'
+      $('#selectedProduct > option[value="'+id+'"]').hide()
+      $('#selectedProduct').val('defaultSelected').change();
+      // console.log(row)
+      updateProductList()
+      $('#activeOrderList').append(row)
+    }
+
+    function removeProductFromList(id){
+      $.each(product_list, function( index, value ) {
+        if(value.product_id == id){
+          product_list.splice(index, 1)
+        }
+      });
+      updateProductList()
+      console.log(product_list)
+    }
+
+    function updateProductList(){
+      const textData = JSON.stringify(product_list);
+      $('#productList').attr('value', textData)
+    }
+
+    $('#addProductButton').on('click', ()=>{
+      var SaveInMyProducts = $('#SaveInMyProducts').is(":checked")
+      let saveIt = '0'
+      if(SaveInMyProducts) saveIt = '1'
+      var newProduct = {
+            name: $('#name').val(),
+            package_amount: $('#package_amount_input').val() || 1,
+            weight: $('#weight').val() || 0,
+            width: $('#width').val() || 0,
+            height: $('#height').val() || 0,
+            depth: $('#depth').val() || 0,
+            volume: $('#volume').val() || 0,
+            amount: $('#amount').val() || 0,
+            returnJson: '1',
+            SaveInMyProducts: saveIt,
+            fromCollection: true,
+          }
+        console.log(newProduct)
+        $.post( "/dodaj-produkt",  newProduct , ( data ) => {
+          if(data.product_id !== null){
+            newProduct.product_id = data.product_id
+            newProduct.id = data.product_id.split('-')[0]
+            newProduct.amount = 1
+            product_data[data.product_id] = newProduct
+            addProductToList(data.product_id)
+            closeAddProduct()
+          }
+        }, "json");
+    })
+
+
+    $('#sendOffer').on('click', ()=>{
+      $('#mainform').submit()
+    })
+
+    $('#AddProduct').on('click', ()=>{
+      $('.add-product-hidden').slideDown("slow")
+    })
+    $("#closeAddProduct").on('click', ()=>{
+      closeAddProduct();
+    })
+
+    function closeAddProduct() {
+      $('.add-product-hidden').hide()
+    }
+    
+    $('#activeOrderList').on('change', '#product_amount', (e)=>{
+      let product_id = $(e.currentTarget.outerHTML).attr('product_id')
+      let amount = $("#product_amount[product_id='"+product_id+"'").val()
+
+      // console.log(amount, product_id)
+      $.each(product_list,  ( index, value ) => {
+        if(value.product_id == product_id){
+          product_list[index].amount = amount
+          // console.log(product_list[index])
+        }
+      });
+      updateProductList()
+    })
+
+    
+    $('#AddProductToOrder').on('click', ()=>{
+      var selected_id = $('#selectedProduct > option').filter(":selected").attr('value')
+      console.log(selected_id)
+      if(selected_id !== 'defaultSelected') addProductToList(selected_id)
+    })
+
+
+    $('#activeOrderList').on('click', '.removeProduct', (e)=>{
+       let id = $(e.currentTarget.outerHTML).attr('data')
+       removeProductFromList(id)
+      $('#product-' + id).remove()
+      $('#selectedProduct > option[value="'+id+'"]').show()
+    })
+
+    // Lista posiadanych produktów
+    /* ------------------------------------*/
+    let product_data = []
+    <% if(products !== null){ %>
+        <% products.forEach((product) => { %>
+          product_data['<%= product.product_id %>'] = {
+          'product_id': '<%= product.product_id %>',
+          'id': '<%= product.id %>',
+          'name': '<%= product.name %>',
+          'width': '<%= product.width %>',
+          'height': '<%= product.height %>',
+          'depth': '<%= product.depth %>',
+          'volume': '<%= product.volume %>',
+          'weight': '<%= product.weight %>',
+          'package_amount': <%= product.package_amount %>,
+          'amount': 1
+          }
+        <% }) %>
+    <% } %>
+    /* ------------------------------------ */ 
+    console.log(product_data)
+      $('#SMS_from_company').change(function() {
+        $('#sms_company').toggle()
+      });
+      $('#EMAIL_from_company').change(function() {
+        $('#email_company').toggle()
+      });
+      $('#SMS_from_client').change(function() {
+        $('#sms_client').toggle()
+      });
+      $('#EMAIL_from_client').change(function() {
+        $('#email_client').toggle()
+      });
+
+      if($('#platnosc').val() == 'Opłacone'){
+        $('#price').prop('disabled', true);
+      }
+      console.log($('#platnosc').val());
+      $('#platnosc').on('change', ()=>{
+        
+        switch($('#platnosc').val()){
+          case 'Pobranie': 
+            $('#price').prop('disabled', false);
+            break;
+
+          case 'Opłacone':
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+          default:
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+        }
+      })
+
+      $('.buttonSubmit').parsley().on('click', function() {
+        console.log('test');
+        var ok = $('.parsley-error').length === 0;
+        $('.bs-callout-info').toggleClass('hidden', !ok);
+        $('.bs-callout-warning').toggleClass('hidden', ok);
+      })
+      .on('form:submit', function() {
+        return false; // Don't submit form for this demo
+      });
+
+
+			$('#customer_phone').on('keyup', function() {
+				$('#sms_client').val($(this).val())
+			})
+
+      
+
+})
+</script>
+<script>
+  function generujInputy() {
+      var liczba = document.getElementById("package_amount_input").value;
+      var container = document.getElementById("inputContainer");
+
+      // Wyczyszczenie poprzedniej zawartości
+      container.innerHTML = "";
+
+      // Generowanie inputów
+      for (var i = 0; i < liczba; i++) {
+        var div = document.createElement("div");
+        div.className = "row";
+        div.innerHTML=`
+              <div class="col-2"></div>
+                <div class="col-8 border p-3">
+                  <div class="row">
+                  <div class="col-3 d-flex align-items-center">
+                    <h6 style="margin: 0 auto;" >Paczka ${i+1}</h6>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="width${i+1}">Szerokość w cm:</label>
+                    <input type="number" class="form-control" id="width${i+1}" name="width${i+1}"></input>
+                    <label for="height${i+1}">Wysokość w cm:</label>
+                    <input type="number" class="form-control" id="height${i+1}" name="height${i+1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="depth${i+1}">Głębokość w cm:</label>
+                    <input type="number" class="form-control" id="depth${i+1}" name="depth${i+1}"></input>
+                    <label for="volume${i+1}">Objętość w m3:</label>
+                    <input type="number" class="form-control" id="volume${i+1}" name="volume${i+1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="weight${i+1}">Waga w kg:</label>
+                    <input type="number" class="form-control" id="weight${i+1}" name="weight${i+1}"></input>
+                  </div>
+                </div>
+                </div>
+              `
+        container.appendChild(div);
+      }
+    }
+</script>

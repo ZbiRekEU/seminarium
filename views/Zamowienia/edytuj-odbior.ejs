@@ -1,0 +1,183 @@
+<%- contentFor('HeaderCss') %>
+  <link href="public/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+  <%- contentFor('breadcrumb') %>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-title-box">
+          <div class="btn-group pull-right">
+            <ol class="breadcrumb hide-phone p-0 m-0">
+              <li class="breadcrumb-item"><a href="/odbiory">Odbiory</a></li>
+              <li class="breadcrumb-item active">Edytuj odbiór</li>
+            </ol>
+          </div>
+          <h4 class="page-title">Edytuj odbiór od producenta</h4>
+        </div>
+      </div>
+    </div>
+
+    <%- contentFor('body') %>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card m-b-20">
+            <div class="card-body">
+
+              <div class="row">
+                <div class="col-6">
+                  <h4 class="mt-0 header-title">Edycja odbioru #<%=collection.collection_id.slice(0,8)%>
+                  </h4>
+                  <p class="text-muted m-b-30 font-14">Wypełnij wszystkie pola poniżej</p>
+                </div>
+                <div class="col-6">
+                  <button type="submit" id="sendForm"
+                    class="btn btn-success waves-effect waves-light buttonSubmit col-4 float-right" value="validate"
+                    style="margin: 10px -10px 0px;">Zapisz zmiany</button>
+                </div>
+              </div>
+
+
+              <form action="/edytuj-odbior" method="post" id="mainform">
+                <input type="hidden" name="collection_id" id="procollection_idductList"
+                  value="<%=collection.collection_id%>" />
+                <div class="row">
+                  <div class="col-sm-12 card " style="padding-top: 5px;">
+                    <div class="row">
+
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="producer_name">Nazwa producenta</label>
+                          <input id="producer_name" name="producer_name" type="text" class="form-control"
+                            value="<%=collection.producer_name%>" required>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-3 ">
+                        <div class="form-group">
+                          <label for="producer_adress">Adres odbioru (opcjonalnie)</label>
+                          <input id="producer_address" name="producer_address" type="text" class="form-control"
+                            value="<%=collection.producer_address%>" required>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="collectionNumber">Numer trasy/Numer odbioru</label>
+                          <input id="collectionNumber" name="collectionNumber" type="text" class="form-control"
+                            value="<%=collection.collection_number%>" required>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="additional_info">Dodatkowe informacje</label>
+                          <input id="additional_info" name="additional_info" type="text" class="form-control"
+                            value="<%=collection.additional_info%>" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                        <div class="form-group">
+                          <label for="additional_info">Status</label>
+
+                          <select class="form-control select2 col-12" id="status_przesylki" name="status">
+                            <% switch(collection.status) { case 'Odbiór zlecony' : %>
+                              <option value="Odbiór zlecony" selected>Odbiór zlecony</option>
+                              <option value="W realizacji" class="dostarczone">W trakcie realizacji</option>
+                              <option value="Dostarczone na magazyn" class="dostarczone">Dostarczone na magazyn</option>
+                              <% break; case 'W realizacji' : %>
+                                <option value="Odbiór zlecony">Odbiór zlecony</option>
+                                <option value="W realizacji" selected class="dostarczone">W trakcie realizacji</option>
+                                <option value="Dostarczone na magazyn">Dostarczone na magazyn</option>
+                                <% break; case 'Dostarczone na magazyn' : %>
+                                  <option value="Odbiór zlecony">Odbiór zlecony</option>
+                                  <option value="W realizacji" class="dostarczone">W trakcie realizacji</option>
+                                  <option value="Dostarczone na magazyn" selected>Dostarczone na magazyn</option>
+                                  <% break; default: %>
+                                    <option value="Odbiór zlecony">Odbiór zlecony</option>
+                                    <option value="W realizacji" class="dostarczone">W trakcie realizacji</option>
+                                    <option value="Dostarczone na magazyn">Dostarczone na magazyn</option>
+                                    <% break;} %>
+                          </select>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="products d-flex flex-column justify-content-start w-75 mx-auto mt-4 text-center">
+                    <div class="productsContainer d-flex flex-column w-100 mx-auto">
+                      <div class="d-flex justify-content-between px-4 py-3"
+                        style="background-color: #212529; color: white">
+                        <div class="w-25">Lp.</div>
+                        <div class="w-25">Nazwa produktu</div>
+                        <div class="w-25">Ilość sztuk</div>
+                        <div class="w-25">Ilość paczek</div>
+                      </div>
+<%if(collection.products[1]){%>
+                      <% collection.products?.forEach((product, index)=>{%>
+                        <div class="d-flex justify-content-between border px-4 py-2">
+                          <div class="w-25">
+                            <%= index + 1 %>
+                          </div>
+                          <div class="w-25">
+                            <%= product.name %>
+                          </div>
+                          <div class="w-25">
+                            <%= product.amount %>
+                          </div>
+                          <div class="w-25">
+                            <%= product.package_amount %>
+                          </div>
+                        </div>
+                        <%})%>
+                      <%} else {%>
+                                <div class="d-flex justify-content-between border px-4 py-2">
+                                  <div class="w-25">
+                                    1
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.name %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.amount %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.package_amount %>
+                                  </div>
+                                </div>
+                              <%}%>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+              </form>
+
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+      <%- contentFor('FooterJs') %>
+
+
+        <%- contentFor('BottomJs') %>
+          <script>
+            $(document).ready(function () {
+              $('#sendForm').on('click', () => {
+                $('#mainform').submit()
+              })
+
+            })
+          </script>

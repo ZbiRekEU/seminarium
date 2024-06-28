@@ -1,0 +1,868 @@
+<%- contentFor('HeaderCss') %>
+  <!-- DataTables -->
+  <link href="public/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+  <!-- Responsive datatable examples -->
+  <link href="public/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <%- contentFor('breadcrumb') %>
+    <!-- <% orders.forEach((order)=> { %>
+    <form action="/edytuj-zamowienie" method="post" class="absoluteForm">
+      <div class="edit-order-background edit-hidden edit-order-<%= order.order_id %>">
+        <div class="edit-order">
+          <div class="order-edit-header">
+            <div class="row">
+              <div class="col-3">
+
+              </div>
+              <div class="col-6" style="text-align: center;">
+                Edytuj zamówienie #<%= order.id %>
+              </div>
+              <div class="col-3" style="text-align: right">
+                <button type="button" class="close close-order-<%= order.order_id %>"
+                  onclick="closeOrder('<%= order.order_id %>')" aria-label="Zamknij" style="color:white;">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row orderSettings">
+            <div class="row ">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="customer_name" style="text-align: center;">Nadawca</label>
+                  <button type="button" class="btn btn-secondary">
+                    <%= order.customer_name %>
+                  </button>
+                </div>
+                <b>Id:</b> <br>
+                <a href="/karta-przewozowa?id=<%= order.order_id %>" class="font-600 text-muted">#<%= order.id%></a> <br> <br>
+
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="customer_name">Nazwa Odbiorcy</label>
+                    <input id="customer_name" name="customer_name" type="text" value="<%= order.customer_name %>"
+                      class="form-control">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="customer_phone">Numer telefonu</label>
+                    <input id="customer_phone" name="customer_phone" type="text"
+                      value="<%= order.customer_phone %>" class="form-control">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-sm-8">
+                    <label for="city">Miejscowość</label>
+                    <input id="city" name="city" type="text" class="form-control" value="<%= order.city %>">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <label for="postal_code">Kod pocztowy</label>
+                    <input id="postal_code" name="postal_code" type="text" class="form-control"
+                      value="<%= order.postal_code %>">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="street">Ulica</label>
+                  <input id="street" name="street" type="text" class="form-control" value="<%= order.street %>">
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-sm-6">
+                    <label for="house_number">Numer domu</label>
+                    <input id="house_number" name="house_number" type="text" class="form-control"
+                      value="<%= order.house_number %>">
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="apartment_number">Mieszkanie</label>
+                    <input id="apartment_number" name="apartment_number" type="text" class="form-control"
+                      value="<%= order.apartment_number %>">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="products">Przedmioty do wysłania</label>
+                  <textarea class="form-control" id="products" name="products" rows="5"><%= order.products %></textarea>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-3 float-right">
+                <div class="form-group ">
+                  <label class="control-label">Status przesyłki</label>
+                  <select class="form-control select2 col-12" name="status">
+                    <% switch(order.status) { case 'złożone' : %>
+                      <option value="złożone" selected>Zamówienie Złożone</option>
+                      <option value="przygotowane">Dostarczone na magazyn</option>
+                      <option value="wysłane">W drodze</option>
+                      <option value="zrealizowane">Dostarczone</option>
+											<option value="zwrot">Wydano klientowi (zwrot)</option>
+										<% break; case 'przygotowane' : %>
+										<option value="złożone" >Zamówienie Złożone</option>
+										<option value="przygotowane" selected>Dostarczone na magazyn</option>
+										<option value="wysłane">W drodze</option>
+										<option value="zrealizowane">Dostarczone</option>
+										<option value="zwrot">Wydano klientowi (zwrot)</option>
+										<% break; case 'wysłane' : %>
+										<option value="złożone" >Zamówienie Złożone</option>
+										<option value="przygotowane">Dostarczone na magazyn</option>
+										<option value="wysłane" selected>W drodze</option>
+										<option value="zrealizowane">Dostarczone</option>
+										<option value="zwrot">Wydano klientowi (zwrot)</option>
+										<% break; case 'zrealizowane' : %>
+										<option value="złożone" >Zamówienie Złożone</option>
+										<option value="przygotowane">Dostarczone na magazyn</option>
+										<option value="wysłane">W drodze</option>
+										<option value="zrealizowane" selected>Dostarczone</option>
+										<option value="zwrot">Wydano klientowi (zwrot)</option>
+										<% break; case 'zwrot' : %>
+										<option value="złożone" >Zamówienie Złożone</option>
+										<option value="przygotowane">Dostarczone na magazyn</option>
+										<option value="wysłane">W drodze</option>
+										<option value="zrealizowane">Dostarczone</option>
+										<option value="zwrot" selected>Wydano klientowi (zwrot)</option>
+										<% break; default: %>
+										<option value="złożone" selected>Zamówienie Złożone</option>
+										<option value="przygotowane">Dostarczone na magazyn</option>
+										<option value="wysłane">W drodze</option>
+										<option value="zrealizowane">Dostarczone</option>
+										<option value="zwrot">Wydano klientowi (zwrot)</option>
+										<% break;} %>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <% if(order.payment=='Opłacone' ){ %>
+                  <div class="form-group">
+                    <label class="control-label">Status płatności</label>
+                    <select class="form-control select2" name="status">
+                      <option value="Opłacone" selected>Opłacone</option>
+                      <option value="Pobranie">Pobranie</option>
+                    </select>
+                  </div>
+                  <% } else{ %>
+                    <div class="form-group">
+                      <label class="control-label">Status płatności</label>
+                      <select class="form-control select2" name="status">
+                        <option value="Opłacone">Opłacone</option>
+                        <option value="Pobranie" selected>Pobranie</option>
+                      </select>
+                    </div>
+                    <% } %>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="price">Kwota</label>
+                  <input id="price" name="price" type="text" class="form-control" value="<%= order.price %>">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group" style="margin-top: 45px; width: 100%;">
+                  <button type="submit" class="btn btn-success float-center" width="100%" name="order_id"
+                    style="margin-top: -19px;" value="<%= order.order_id %>">Zapisz zmiany</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <% }) %> -->
+
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-title-box">
+
+          <h4 class="page-title">Historia zamówień</h4>
+        </div>
+      </div>
+    </div>
+
+
+    <%- contentFor('body') %>
+      <div class="d-flex mb-2 justify-content-between w-100">
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle mr-1 ml-1"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Zaznacz
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <button class="dropdown-item" onclick="checkAll()">wszystkie</button>
+            <button class="dropdown-item" onclick="checkAllOnPage()">wszystkie na stronie</button>
+          </div>
+        </div>
+        <div class="multiSelect d-flex " id="multiSelect" style="visibility: hidden;">
+          <form action="/karty-przewozowe" method="POST">
+            <input type="text" name="ids" class="replace" style="display: none;" />
+            <input type="submit" id="sendButton" class="btn btn-success" value="Karta przewozowa" />
+          </form>
+
+          <form action="/etykiety" method="POST" class="ml-1">
+            <input type="text" name="ids" class="replace" style="display: none;" />
+            <input type="submit" id="sendButton" class="btn btn-success" value="Etykieta" />
+          </form>
+          <form action="/rozliczenia" method="POST" class="ml-1 mr-2">
+            <input type="text" name="ids" class="replace" style="display: none;" />
+            <input type="submit" id="sendButton" class="btn btn-success" value="Rozlicz" />
+          </form>
+          <form action="/eksport" method="POST" class="ml-1 mr-2">
+            <input type="text" name="ids" class="replace" style="display: none;" />
+            <input type="submit" id="sendButton" class="btn btn-success" value="Eksport do Routimo" />
+          </form>
+          <button class="btn btn-secondary" onclick="clearCheckbox()">Odznacz wszystkie</button>
+        </div>
+        <div class="d-flex">
+          <button class="btn btn-primary px-3" type="button" data-toggle="collapse" data-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mr-1"
+              viewBox="0 0 16 16">
+              <path
+                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+            </svg>
+            Filtruj
+          </button>
+          <% if(clearFlag){%>
+            <a class="btn btn-secondary ml-1" type="button" href="/wszystkie-zamowienia">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg mr-1"
+                viewBox="0 0 16 16">
+                <path
+                  d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+              </svg>
+              Wyczyść filtrowanie</a>
+
+            <!-- <div class="btn-group" role="group">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle mr-1 ml-1"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Zaznacz
+              </button>
+              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <button class="dropdown-item" onclick="checkAll()">wszystkie</button>
+                <button class="dropdown-item" onclick="checkAllOnPage()">wszystkie na stronie</button>
+              </div>
+            </div> -->
+
+
+            <% } %>
+              <div class="perPage d-flex" style="margin:0 25px ;align-items: center;">
+                Zamówień na stronie:
+                <a href="/wszystkie-zamowienia?perPage=100" type="button" id="perPage100" class="btn btn-secondary mr-1"
+                  style="margin-left: 7px;">100</a>
+                <a href="/wszystkie-zamowienia?perPage=50" type="button" id="perPage50"
+                  class="btn btn-secondary mr-1">50</a>
+                <a href="/wszystkie-zamowienia?perPage=20" type="button" id="perPage20" class="btn btn-secondary">20</a>
+              </div>
+              <div>
+                <span style="display: flex; align-items: center;">Wyszukaj: <input style="margin-left: 7px;"
+                    id="wyszukaj" type="text" class="form-control" placeholder="ID zamówienia.."></span>
+              </div>
+        </div>
+      </div>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <h5>Kryteria filtrowania: </h5>
+          <form action="/wszystkie-zamowienia" method="POST">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="nazwaNadawcy">Nazwa nadawcy</label>
+                  <input id="nazwaNadawcy" name="nazwaNadawcy" type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="nazwaOdbiorcy">Nazwa odbiorcy</label>
+                  <input id="nazwaOdbiorcy" name="nazwaOdbiorcy" type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-md-2 float-right">
+                <div class="form-group ">
+                  <label class="control-label">Status przesyłki</label>
+                  <select class="form-control select2 col-12" id="status_przesylki" name="status">
+                    <option value="dowolny" selected>Dowolny</option>
+                    <option value="złożone">Zamówienie Złożone</option>
+                    <option value="przygotowane">Dostarczone na magazyn</option>
+                    <option value="wysłane">W drodze</option>
+                    <option value="zrealizowane">Dostarczone</option>
+                    <option value="zwrot">Wydano klientowi (zwrot)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2 float-right">
+                <div class="form-group ">
+                  <label class="control-label">Wniesienie</label>
+                  <select class="form-control select2 col-12" id="wniesienie" name="wniesienie">
+                    <option value="dowolny" selected>Dowolny</option>
+                    <option value="1">Z wniesieniem</option>
+                    <option value="0">Bez wniesienia</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2 float-right">
+                <div class="form-group ">
+                  <label class="control-label">Rozliczone</label>
+                  <select class="form-control select2 col-12" id="rozliczone" name="rozliczone">
+                    <option value="dowolny" selected>Dowolny</option>
+                    <option value="Tak">Rozliczone</option>
+                    <option value="Nie">Nie rozliczone</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-end">
+              <button class="btn btn-success mr-2 w-25" id="filtruj" type="submit" data-toggle="collapse"
+                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filtruj</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card m-b-20">
+            <div class="card-body">
+
+              <form class="edit_order" action="edytuj-zamowinie" method="post">
+                <table id="datatable" class="table  dt-responsive nowrap table-vertical" width="100%" cellspacing="0">
+                  <!-- <thead class="thead-dark"> -->
+                  <thead style="background-color: #263238; color: white;">
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th>Id Zamówienia</th>
+                      <th>Data złożenia zamówienia</th>
+                      <th>Planowana data i godzina dostarczenia </th>
+                      <th>Nazwa nadawcy</th>
+                      <th>Nazwa odbiorcy</th>
+                      <th>Powiadomienie <br> Telefon odbiorcy </th>
+                      <th>Adres</th>
+                      <th>Dostawa/odbiór od klienta</th>
+                      <th>Dodatkowe informacje</th>
+                      <!-- <th>Powiadomienie SMS</th> -->
+                      <th>Wniesienie</th>
+                      <th>Rozliczone</th>
+                      <th>Status</th>
+                      <th>Płatność</th>
+                      <th>Opcje</th>
+                    </tr>
+                  </thead>
+                  <tbody id="lista-zamowienia">
+
+                    <% orders.forEach((order)=> { %>
+
+                      <tr class="order order-<%= order.order_id %>" id="pokaz-<%= order.order_id %>">
+
+                        <td>
+                          <input type="checkbox" class="checkboxID" value="<%=order.order_id %>" name="check">
+                        </td>
+                        <td>
+                          <% if(order.exported==="Tak" ){ %>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green"
+                              class="bi bi-box-arrow-right" style="margin-bottom: 5px;" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd"
+                                d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                              <path fill-rule="evenodd"
+                                d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                            </svg>
+
+                            <%}%>
+                        </td>
+                        <td>
+                          <a href="/karta-przewozowa?id=<%= order.order_id %>" class="font-600 text-muted">#<%= order.id
+                              %></a>
+                        </td>
+                        <td>
+                          <%= order.date %>
+                        </td>
+                        <td>
+                          <%if(order.planned_delivery_date_status=='Potwierdzono' ){%>
+                             <% if(order.delivery_confirmation_status_changed_by == 'Administratora'){ %>
+                              <span class="badge badge-success" data-toggle="tooltip" data-placement="top" data-html="true" title="Godziny dostawy potwierdzone przez klienta" >
+                            <% }else{ %>
+                              <span class="badge badge-success" data-toggle="tooltip" data-placement="top" data-html="true" title="Potwierdzono przez <%= order.delivery_confirmation_status_changed_by.toLowerCase()%>">
+                            <% } %>
+                              <%if(order.planned_date_dayOfWeek){%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %></br>
+                                      (<%= order.planned_date_dayOfWeek %>)
+                                    <%} else {%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %>
+                                    <%}%>
+                            </span>
+                            <%}else if(order.planned_delivery_date_status=='Odrzucono' ){%>
+                              <% if(order.delivery_confirmation_status_changed_by == 'Administratora'){ %>
+                              <span class="badge badge-danger" data-toggle="tooltip" data-placement="top" data-html="true" title="Godziny dostawy odrzucone przez klienta" >
+                            <% }else{ %>
+                              <span class="badge badge-danger" data-toggle="tooltip" data-placement="top" data-html="true" title="Odrzucono przez <%= order.delivery_confirmation_status_changed_by.toLowerCase()%>">
+                            <% } %>
+                                <%if(order.planned_date_dayOfWeek){%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %></br>
+                                      (<%= order.planned_date_dayOfWeek %>)
+                                    <%} else {%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %>
+                                    <%}%>
+                                
+                              </span>
+                              <%}else if(order.planned_delivery_date_status=='Nie potwierdzono' ){%>
+                                <span class="badge badge-info" onclick="markAsConfirmed('<%=order.order_id%>')"
+                                  style="cursor: pointer;" data-toggle="tooltip" data-placement="top" data-html="true"
+                                  title="Oczekuje na potwierdzenie, kliknij aby potwierdzić">
+                                  <%if(order.planned_date_dayOfWeek){%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %></br>
+                                      (<%= order.planned_date_dayOfWeek %>)
+                                    <%} else {%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %>
+                                    <%}%>
+                                </span>
+                                <%}else{%>
+                                  <span class="badge badge-secondary">
+                                    <%if(order.planned_date_dayOfWeek){%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %></br>
+                                      (<%= order.planned_date_dayOfWeek %>)
+                                    <%} else {%>
+                                      <%= order.planned_date %>
+                                      <%= order.planned_time %>
+                                    <%}%>
+                                  </span>
+                                  <%}%>
+                        </td>
+                        <td>
+                          <%= order.username %>
+                        </td>
+                        <td>
+                          <%= order.customer_name %>
+                        </td>
+                        <td>
+                          <input type="checkbox" disabled <% if(order.SMS_from_client) { %>checked<% } %>> <%=
+                              order.customer_phone %>
+                        </td>
+                        <td>
+                          <%= order.city %>
+                            <%= order.postal_code %>
+                              <%= order.street %>
+                                <%= order.house_number %>
+                                  <% if (order.apartment_number !='' ) { %> / <%= order.apartment_number %>
+                                      <% } %>
+                        </td>
+                        <td>
+
+
+                          <% if(order.direction=='Dostawa' ){ %>
+                            <span class="badge badge-success">Dostawa</span>
+                            <% } else{ %>
+                              <span class="badge badge-secondary">Odbiór</span>
+                              <% } %>
+
+                        </td>
+
+                        <% switch(order.additional_info){ case '' : %>
+                          <td>-</td>
+                          <% break; default: %>
+                            <td>
+                              <%= order.additional_info %>
+                            </td>
+                            <% break; } %>
+                              <!-- <td style="text-align: center;"><input type="checkbox" disabled <% if(order.SMS_from_client) { %>checked<% } %>><br/> <%= order.sms_client %></td> -->
+                              <% switch(order.bringing){ case '0' : %>
+                                <td><span class="badge badge-danger">Nie</span></td>
+                                <% break; case '1' : %>
+                                  <td><span class="badge badge-success">Tak</span></td>
+                                  <% break; default: %>
+                                    <td>BD</td>
+                                    <% break; } %>
+                                      <td>
+
+                                        <% if(order.settled=='Nie' ){ %>
+                                          <span class="badge badge-danger">Nie</span>
+                                          <% } else{ %>
+                                            <span class="badge badge-success">Tak</span>
+                                            <% } %>
+                                      </td>
+                                      <% switch(order.status) { case 'złożone' : %>
+                                        <td class="bg-secondary"><span class="badge badge-secondary">Zamówienie złożone
+                                        </td>
+                                        <% break; case 'przygotowane' : %>
+                                          <td class="bg-info"><span class="badge badge-info">Dostarczone na magazyn</td>
+                                          <% break; case 'wysłane' : %>
+                                            <td class="bg-primary"><span class="badge badge-primary">W drodze</td>
+                                            <% break; case 'zrealizowane' : %>
+                                              <td class="bg-success"><span class="badge badge-success">Dostarczone</td>
+                                              <% break; case 'zwrot' : %>
+                                                <td class="bg-success"><span class="badge badge-success">Wydano
+                                                    klientowi (zwrot)</td>
+                                                <% break; default: %>
+                                                  <td class="bg-secondary"><span class="badge badge-secondary">Nieznany
+                                                  </td>
+                                                  <% break; } %>
+
+                                                    <% if(order.payment=='Opłacone' ){ %>
+                                                      <td><span class="badge badge-success">Opłacone <%= order.price %>
+                                                            zł</span></td>
+                                                      <% } else{ %>
+                                                        <td><span class="badge badge-secondary">Pobranie <%= order.price
+                                                              %>
+                                                              zł</span></td>
+                                                        <% } %>
+
+                                                          <td
+                                                            style="padding-top: 0; padding-bottom:0; font-size: 2rem;">
+                                                            <a href="/edytuj-zamowienie?id=<%= order.order_id %>"
+                                                              class="m-r-20 text-muted" data-toggle="tooltip"
+                                                              data-placement="top" title=""
+                                                              data-original-title="Edytuj dane zamówienia"><i
+                                                                class="fa fa-cog" aria-hidden="true"></i></a>
+                                                            <a href="/karta-przewozowa?id=<%= order.order_id %>"
+                                                              class="m-r-20 text-muted" data-toggle="tooltip"
+                                                              data-placement="top" title=""
+                                                              data-original-title="Zobacz kartę przewozową"><i
+                                                                class="mdi mdi-file-pdf-box font-24"></i></a>
+
+                                                            <%if(order.print_date==null ){%>
+                                                              <a href="/etykieta?id=<%= order.order_id %>"
+                                                                class="m-r-20 text-muted" data-toggle="tooltip"
+                                                                data-placement="top" title=""
+                                                                data-original-title="Wyświetl etykiete"><i
+                                                                  class="mdi mdi-tag font-24"
+                                                                  style="color: #d9534f"></i></a>
+                                                              <%}else{%>
+                                                                <a href="/etykieta?id=<%= order.order_id %>"
+                                                                  class="m-r-20 text-muted" data-toggle="tooltip"
+                                                                  data-placement="top" title=""
+                                                                  data-original-title="Wyświetl etykiete"><i
+                                                                    class="mdi mdi-tag font-24"
+                                                                    style="color: #5cb85c"></i></a>
+                                                                <%}%>
+
+                                                                  <a href="/usun-zamowienie?id=<%= order.order_id %>"
+                                                                    class="m-r-20 text-muted" data-toggle="tooltip"
+                                                                    data-placement="top" title=""
+                                                                    data-original-title="Usuń zamówienie"><i
+                                                                      class="mdi mdi-delete font-24"></i></a>
+                                                          </td>
+                      <tr>
+                        <td colspan="16" style="border: none">
+                          <h6 class="w-25 mx-auto" onclick="toggleCollapse('<%= order.order_id %>')"
+                            style="cursor: pointer;">
+                            Pokaż więcej
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                              <path
+                                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                            </svg>
+                          </h6>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="16" class="collapse" id="<%=order.order_id%>" style="border: none;">
+                          <div class="products d-flex flex-column justify-content-start ">
+
+                            <div class="productsContainer d-flex flex-column">
+                              <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-around w-25"
+                                  style="background-color: #212529; color: white">
+                                  <div style="width: 25%;">Lp.</div>
+                                  <div style="width: 75%;">Nazwa produktu</div>
+                                </div>
+                                <div class="d-flex justify-content-around w-75"
+                                  style="background-color: #212529; color: white">
+                                  <div style="width: 15%;">Szerokość paczki [cm]</div>
+                                  <div style="width: 15%;">Wysokość paczki [cm]</div>
+                                  <div style="width: 15%;">Głębokość paczki [cm]</div>
+                                  <div style="width: 15%;">Waga paczki [kg]</div>
+                                  <div style="width: 15%;">Objętość paczki [m3]</div>
+                                </div>
+                              </div>
+                              <% order.products?.forEach((product, index)=>{%>
+
+                                <div class="d-flex justify-content-between border">
+                                  <div class="d-flex justify-content-around w-25">
+                                    <div style="width: 25%;">
+                                      <%= index + 1 %>
+                                    </div>
+                                    <div style="width: 75%;">
+                                      <%= product.product_name %>
+                                    </div>
+                                  </div>
+                                  <div class="d-flex flex-column w-75">
+                                    <% product.packages.forEach((package, index)=>{%>
+                                      <% if(index+1 !=product.packages.length){%>
+                                        <div class="d-flex justify-content-around w-100 border-bottom">
+                                          <div style="width: 15%;">
+                                            <%= package.width %>
+                                          </div>
+                                          <div style="width: 15%;">
+                                            <%= package.height%>
+                                          </div>
+                                          <div style="width: 15%;">
+                                            <%= package.depth %>
+                                          </div>
+                                          <div style="width: 15%;">
+                                            <%= package.weight%>
+                                          </div>
+                                          <div style="width: 15%;">
+                                            <%= package.volume %>
+                                          </div>
+                                        </div>
+                                        <%} else{ %>
+                                          <div class="d-flex justify-content-around w-100">
+                                            <div style="width: 15%;">
+                                              <%= package.width %>
+                                            </div>
+                                            <div style="width: 15%;">
+                                              <%= package.height%>
+                                            </div>
+                                            <div style="width: 15%;">
+                                              <%= package.depth %>
+                                            </div>
+                                            <div style="width: 15%;">
+                                              <%= package.weight%>
+                                            </div>
+                                            <div style="width: 15%;">
+                                              <%= package.volume %>
+                                            </div>
+                                          </div>
+
+                                          <%}%>
+
+                                            <%})%>
+                                  </div>
+                                </div>
+
+                            </div>
+                            <%})%>
+
+
+                          </div>
+
+
+            </div>
+            </td>
+            </tr>
+            </tr>
+
+
+            <% }) %>
+              </tbody>
+              </table>
+              </form>
+
+          </div>
+        </div>
+      </div>
+      </div>
+
+
+      <%- contentFor('FooterJs') %>
+        <!-- Datatable js -->
+        <script src="public/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="public/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Responsive examples -->
+        <script src="public/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="public/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+          </script>
+        <script src="jquery.qrcode.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <%- contentFor('BottomJs') %>
+
+          <script type="text/javascript">
+            $(document).ready(function () {
+
+            });
+            function orderSettings(id) {
+              console.log($('.edit-order-' + id))
+              $('.edit-order-' + id).slideDown("slow")
+            }
+            function closeOrder(id) {
+              $('.edit-order-' + id).hide()
+            }
+
+          </script>
+          <script>
+            function markAsConfirmed(order_id) {
+              console.log(order_id);
+
+              var url = "./markasconfirmed";
+              var params = {
+                method: 'POST',
+                headers: {
+                  'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                  order_id,
+                  who: 'Administratora'
+                })
+              };
+              fetch(url, params)
+                .then(function (response) {
+                  window.location.reload();
+                })
+            }
+          </script>
+
+          <script>
+            $(document).ready(function () {
+              $("#wyszukaj").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#lista-zamowienia tr").filter(function () {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+
+
+            });
+          </script>
+
+          <!-- Zaznaczanie wielu zamowien -->
+          <script>
+            var allCheckBox = document.querySelectorAll('.checkboxID');
+            var ids = [];
+            allCheckBox.forEach((checkbox) => {
+              checkbox.addEventListener('click', (event) => {
+                if (event.target.checked) {
+                  console.log(event.target.value);
+                  ids.push(event.target.value);
+                } else {
+                  console.log('uncheck:', event.target.value);
+                  ids = ids.filter((id) => id !== event.target.value);
+                }
+                const el = document.querySelectorAll('.replace');
+                el.forEach((e) => {
+                  e.value = ids;
+                });
+                if (ids.length > 0) {
+                  let forms = document.getElementById("multiSelect")
+                  forms.style.visibility = "visible"
+                } else {
+                  let forms = document.getElementById("multiSelect")
+                  forms.style.visibility = "hidden"
+                }
+              });
+            });
+
+            function clearCheckbox() {
+              //odznaczenie checkboxow
+              // $("input:checked").removeAttr('checked');
+              var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+              for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+              }
+              console.log($("input:checked"));
+              //wyzerowanie tablicy z id zaznaczonych zamowien
+              ids = [];
+              //wyczyszczenie ukrytych inputow z wartosciami id
+              const el = document.querySelectorAll('.replace');
+              el.forEach((e) => {
+                e.value = '';
+              });
+              //schowanie paska z opcjami
+              let forms = document.getElementById("multiSelect")
+              forms.style.visibility = "hidden"
+            }
+
+
+          </script>
+
+
+          <!-- Zaznaczenie wszystkich po filtrowaniu -->
+          <script>
+            function checkAll() {
+              let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+              checkboxes.forEach(function (checkbox) {
+                checkbox.click();
+              });
+            }
+          </script>
+
+          <!-- Zaznaczenie wszystkich na stronie po filtrowaniu -->
+          <script>
+            function checkAllOnPage() {
+              let inputs = [];
+              let orders = document.querySelectorAll('tr.order[style="display: table-row;"]');
+
+              for (let order of orders) {
+                let input = order.querySelector('td input[type="checkbox"]');
+                inputs.push(input);
+              }
+              inputs.forEach(function (checkbox) {
+                checkbox.click();
+              });
+            }
+          </script>
+
+          <style>
+            .paging-nav {
+              text-align: right;
+              padding-top: 2px;
+            }
+
+            .paging-nav a {
+              margin: auto 1px;
+              text-decoration: none;
+              display: inline-block;
+              padding: 1px 7px;
+              background: #91b9e6;
+              color: white;
+              border-radius: 3px;
+            }
+
+            .paging-nav .selected-page {
+              background: #187ed5;
+              font-weight: bold;
+            }
+
+            .paging-nav,
+            #tableData {
+              margin: 0 auto;
+              font-family: Arial, sans-serif;
+            }
+
+            th,
+            td {
+              max-width: max-content !important;
+              padding: 5px !important;
+              margin: 0px !important;
+              text-align: center;
+            }
+          </style>
+
+          <!-- <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+          <script type="text/javascript" src="public/assets/plugins/datatables/paging.js"></script>
+          <script>
+            $(document).ready(function () {
+              let perPages = '<%=perPage%>'
+              $('#datatable').paging({ limit: perPages * 3 });
+            })
+          </script>
+          <script>
+            function toggleCollapse(id) {
+              let element = document.getElementById(id);
+              if (element.classList.contains("show")) {
+                element.classList.remove("show")
+              } else {
+
+                element.classList.add("show")
+              }
+            }
+          </script>

@@ -1,0 +1,231 @@
+<%- contentFor('HeaderCss') %>
+  <link href="public/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+  <!-- Responsive datatable examples -->
+  <link href="public/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+  <%- contentFor('breadcrumb') %>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-title-box">
+          <div class="btn-group pull-right">
+            <ol class="breadcrumb hide-phone p-0 m-0">
+              <li class="breadcrumb-item"><a href="/moje-zamowienia">Odbiory</a></li>
+            </ol>
+          </div>
+          <h4 class="page-title">Historia odbiorów</h4>
+        </div>
+      </div>
+    </div>
+    <%- contentFor('body') %>
+
+      <div class="row">
+        <div class="col-11"></div>
+        <div class="col-1 d-flex justify-content-end">
+          <a href="/dodaj-odbior" class="btn btn-success mb-2 btn-lg" id="AddProduct">Dodaj nowy</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card m-b-20">
+            <div class="card-body">
+              <form class="edit_order" action="edytuj-zamowinie" method="post">
+                <table id="datatable" class="table  dt-responsive nowrap table-vertical text-center" width="100%"
+                  cellspacing="0">
+                  <thead style="background-color: #263238; color: white;">
+                    <tr>
+                      <th>Id odbioru</th>
+                      <th>Nazwa producenta</th>
+                      <th>Adres producenta</th>
+                      <th>Numer trasy/odbioru</th>
+                      <th>Dodatkowe informacje</th>
+                      <th>Status</th>
+                      <th>Liczba produktów</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="lista">
+                    <%collections.forEach(collection=>{%>
+                      <tr>
+                        <td>#<%=collection.collection_id.slice(0,8)%>
+                        </td>
+                        <td>
+                          <%=collection.producer_name%>
+                        </td>
+                        <td>
+                          <%=collection.producer_address%>
+                        </td>
+                        <td>
+                          <%=collection.collection_number%>
+                        </td>
+                        <td>
+                          <%=collection.additional_info%>
+                        </td>
+                        <% switch(collection.status) { case 'Odbiór zlecony' : %>
+                          <td class="bg-secondary"><span class="badge badge-secondary">Odbiór zlecony</td>
+                          <% break; case 'W realizacji' : %>
+                            <td class="bg-info"><span class="badge badge-info">W trakcie realizacji</td>
+                            <% break; case 'Dostarczone na magazyn' : %>
+                              <td class="bg-success"><span class="badge badge-primary">Dostarczone na magazyn</td>
+                              <% break;} %>
+
+                                <td>
+                                  <%if(collection.products[1]){%>
+                                  <%=collection.products.length%>
+                                  <%}else{%>
+                                    1
+                                  <%}%>
+                                </td>
+                                <td style="padding-top: 0; padding-bottom:0; font-size: 2rem;">
+                                  <a href="/edytuj-moj-odbior?id=<%= collection.collection_id %>"
+                                    class="m-r-20 text-muted" data-toggle="tooltip" data-placement="top" title=""
+                                    data-original-title="Edytuj dane odbioru"><i class="fa fa-cog"
+                                      aria-hidden="true"></i></a>
+                                </td>
+                      <tr>
+                        <td colspan="16" style="border: none">
+                          <h6 class="w-25 mx-auto text-center"
+                            onclick="toggleCollapse('<%= collection.collection_id %>')" style="cursor: pointer;">
+                            Pokaż więcej
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                              <path
+                                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                            </svg>
+                          </h6>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="16" class="collapse" id="<%=collection.collection_id%>"
+                          style="border: none; background-color: white; padding-top: 0px; padding-bottom: 30px;">
+                          <div class="products d-flex flex-column justify-content-start text-center">
+                            <div class="productsContainer d-flex flex-column w-50 mx-auto">
+                              <div class="d-flex justify-content-between px-4 py-3"
+                                style="background-color: #212529; color: white">
+                                <div class="w-25">Lp.</div>
+                                <div class="w-25">Nazwa produktu</div>
+                                <div class="w-25">Ilość sztuk</div>
+                                <div class="w-25">Ilość paczek</div>
+                              </div>
+                              <%if(collection.products[1]){%>
+                              <% collection.products?.forEach((product, index)=>{%>
+                                <div class="d-flex justify-content-between border px-4 py-2">
+                                  <div class="w-25">
+                                    <%= index + 1 %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= product.name %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= product.amount %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= product.package_amount %>
+                                  </div>
+                                </div>
+                                <%})%>
+                              <%} else {%>
+                                <div class="d-flex justify-content-between border px-4 py-2">
+                                  <div class="w-25">
+                                    1
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.name %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.amount %>
+                                  </div>
+                                  <div class="w-25">
+                                    <%= collection.products.package_amount %>
+                                  </div>
+                                </div>
+                              <%}%>
+
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      </tr>
+                      <%})%>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <%- contentFor('FooterJs') %>
+        <script src="public/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="public/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Responsive examples -->
+        <script src="public/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="public/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"> </script>
+        <script src="jquery.qrcode.min.js"></script>
+
+        <%- contentFor('BottomJs') %>
+          <script type="text/javascript">
+            $(document).ready(function () {
+              $('#AddProduct').on('click', () => {
+                $('.add-product-hidden').slideDown("slow")
+              })
+            });
+
+            function closeAddProduct(id) {
+              $('.add-product-hidden').hide()
+            }
+          </script>
+          <style>
+            .paging-nav {
+              text-align: right;
+              padding-top: 2px;
+            }
+
+            .paging-nav a {
+              margin: auto 1px;
+              text-decoration: none;
+              display: inline-block;
+              padding: 1px 7px;
+              background: #91b9e6;
+              color: white;
+              border-radius: 3px;
+            }
+
+            .paging-nav .selected-page {
+              background: #187ed5;
+              font-weight: bold;
+            }
+
+            .paging-nav,
+            #tableData {
+              margin: 0 auto;
+              font-family: Arial, sans-serif;
+            }
+          </style>
+
+          <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+          <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+          <script type="text/javascript" src="public/assets/plugins/datatables/paging.js"></script>
+
+          <script>
+            $(document).ready(function () {
+              $('#datatable').paging({ limit: 20 * 3 });
+            })
+          </script>
+
+          <script>
+            function toggleCollapse(id) {
+              let element = document.getElementById(id);
+              if (element.classList.contains("show")) {
+                element.classList.remove("show")
+              } else {
+
+                element.classList.add("show")
+              }
+            }
+          </script>

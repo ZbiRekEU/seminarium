@@ -1,0 +1,381 @@
+
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+<style>
+	.flip {
+ 		transform: rotate(-90deg);
+		margin-top: 466px !important;
+		margin-bottom: 300px !important;
+		overflow: hidden;
+		transform-origin: left top;
+    -webkit-transform: rotate(-90deg) translateX(-100%);
+    -moz-transform: rotate(-90deg) translateX(-100%);
+    -ms-transform: rotate(-90deg) translateX(-100%);
+    -o-transform: rotate(-90deg) translateX(-100%);
+		/* -moz-transform: scaleX(-1); 
+      -o-transform: scaleX(-1); 
+      -webkit-transform: scaleX(-1); 
+      transform: scaleX(-1);  */
+      /* filter: FlipH;   */
+	}
+
+	#actionButtons {
+		display: none;
+		position: absolute;
+    top: 0px;
+    right: 0;
+	}
+
+@media print {
+
+	.fullheight {
+        overflow-y: auto;
+        min-height: auto;
+        height: auto;
+	}
+
+	@page {
+			size: A1|A4|A5 landscape; /* auto is default portrait; */
+	}
+	
+	body {
+		background: #fff;
+	}
+
+	.noPrint {
+		display: none;
+	}
+
+}
+
+.header {
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.information {
+	display: flex;
+    flex-direction: row;
+		justify-content: space-between;
+    flex: 1 auto;
+		margin-left: 15px;
+}
+
+.group {
+	flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+}
+
+.m-b-20 {
+		margin-bottom: 40px !important;
+	}
+
+.isDisabled {
+	color: currentColor;
+	cursor: not-allowed;
+	opacity: 0.5;
+	text-decoration: none;
+}
+
+.notLoading, .loadCount {
+	display: none !important;
+}
+
+</style>
+
+<% include ../Partials/HeaderRoot.ejs  %>
+
+<div class="row noPrint" id="actionButtons" style="margin: 0 auto; margin-bottom: 40px;">
+	<div class="col-12">
+		<div class="d-print-none p-2">
+				<div class="pull-right">
+														<!-- <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i class="fa fa-print"></i></a> -->
+					 <a id="drukuj" href="#" class="btn btn-success waves-effect waves-light isDisabled"  style="font-size: 24px;"><span id="loadingIcon" class="spinner-border spinner-border-sm notLoading"
+						style="margin-bottom: 5px; margin-right: 5px;" role="status" aria-hidden="true"></span><span id="loadCount" class="loadCount"><span id="amount"></span>/<span id="length"></span></span><i class="fa fa-print"></i></a> 
+					 <a style="color: white;" id="pdf" class="btn btn-primary waves-effect waves-light isDisabled">Pobierz jako pdf</a>
+					 <a id="obrocEtykiete" class="btn btn-primary waves-effect waves-light isDisabled" style="color: white;">Etykieta 16x9</a>
+					 <a href="" class="btn btn-primary waves-effect waves-light">Odśwież</a> 
+					 <a href="/moje-zamowienia" class="btn btn-primary waves-effect waves-light">Powrót</a> 
+				</div>
+		</div>
+	</div>
+</div>
+
+<div id="labels">
+<% packages.forEach((label) => { %>
+<div class="row" style="width: auto; height: auto;">
+	<div class="col-12">
+			
+			<div class="card m-b-20 document" id="printIt" style="margin: 0 0 0 0; width: 1054px; height: 332px; border: 1px solid #000; border-radius: unset; background-color: #fff;">
+					<div class="card-body" id="karta_przewozowa">
+
+							<div class="row">
+									<div class="col-12">
+											<div class="invoice-title">
+												<div class="header">
+													<span class="m-t-0">
+														<img src="public/assets/images/logo.png" alt="logo" height="56"/>
+													</span>
+													<div class="information">
+														<div class="group">
+															<span class="pull-right font-16 d-none d-lg-block">
+																<strong>Data złożenia zamówienia:</strong>
+																<%= order.date %>
+															</span>
+															<span class="pull-right font-16 d-none d-lg-block"><strong>Karta przewozowa: #<%= order.id %></strong></span>
+														</div>
+										
+													<div class="group">
+														<span class="pull-right font-16 d-none d-lg-block">
+															<strong>Produkt:</strong>
+															<%= label.label %>/<%= amount.labels %>
+															</span>
+															<span class="pull-right font-16 d-none d-lg-block">
+																<strong>Paczka:</strong>
+																<%= label.package_number %>/<%= label.package_amount %>
+																</span>
+													</div>
+
+
+													</div>
+												</div>
+											</div>
+											<hr>
+											<div class="row">
+													<div class="col-3">
+															<address style="font-size: 20px">
+																	<strong>Odbiorca:</strong><br>
+																	<%= order.customer_name %><br>
+																	<%= order.customer_phone %><br>
+																	<%= order.postal_code %> <%= order.city %><br>
+																	<%= order.street %> <%= order.house_number %> <% if(order.apartment_number){ %> / <%= order.apartment_number %>  <% } %><br>
+															</address>
+															
+													</div>
+													<div class="col-3">
+														<address>
+															<strong>Nadawca:</strong><br>
+															<%= user.name %> <%= user.surname %><br>
+															 <%= user.full_name %><br>
+															<%= user.nip %><br>
+															<%= user.phone %> <br>
+															<%= user.postal_code %> <%= user.city %><br>
+															<%= user.street %> <%= user.house_number %> <% if(user.apartment_number){ %> / <%= user.apartment_number %>  <% } %><br>
+													</address>
+													</div>
+													<div class="col-3">
+														<strong>Szczegóły zamówienia:</strong>
+															<div class="produkty">
+																<%= label.name %>
+																	<br>
+																	<div class="d-print-none p-2">
+		 
+																	</div>
+															</div>
+															<address>
+																<strong>Płatność:</strong><br>
+																Płatność: <%= order.payment %><br>
+																Kwota: <%= order.price %>
+															</address>
+													</div>
+													<div class="col-3 text-right">
+														<div class="qrcode">
+															<div id="qrcode-<%= label.Id_confirmation %>"></div>
+															<script type="text/javascript">
+																var qrcode = new QRCode(document.getElementById("qrcode-<%= label.Id_confirmation %>"), {
+																	text: "https://system.verniro-trans.pl/skanuj-etykiete?package_id=<%= label.Id_confirmation %>&id=<%= order.order_id %>",
+																	width: 200,
+																	height: 200,
+																	colorDark : "#000000",
+																	colorLight : "#ffffff",
+																	correctLevel : QRCode.CorrectLevel.H
+																});
+																</script>
+														</div>
+													</div>
+											</div>
+									</div>
+							</div>
+			</div>
+	</div> 
+</div> <!-- end col -->
+</div> <!-- end row -->
+	
+<% }) %>
+</div> <!-- end labels -->
+
+<% include ../Partials/FooterRoot  %>
+
+<script>
+
+//Zmiana zachowania Ctr+P
+document.addEventListener('keydown', function(event) {
+  if (event.ctrlKey && event.key === 'p') {
+    event.preventDefault(); // Zapobieganie domyślnej akcji przeglądarki (w tym przypadku drukowaniu)
+
+	//programowe wywołanie drukowania
+	$("#drukuj").click()
+  }
+});
+
+</script>
+
+<script>
+
+	$(document).ready(function() {
+		$('#obrocEtykiete').on('click', () => {
+				console.log('test')
+				$(".document").addClass('flip').removeClass('m-b-20')
+
+				// $('.d-print-none').css('position', 'absolute').css('top', '1px').css('left', '50%')
+				// setTimeout(()=> {$("#drukuj").click()},1000)
+		})
+
+		$('#obrocEtykiete').removeClass('isDisabled')
+
+		$('#actionButtons').css('display', 'block')
+
+		$(".pull-right").on('click', '#drukuj', async () => {
+			$('#loadingIcon').removeClass('notLoading')
+			$('#loadCount').removeClass('loadCount')
+			if ($('.document').hasClass('flip')) {
+				$('.document').removeClass('flip')
+
+
+				let printAmount = $('.row').find("#printIt")
+				var imgs = ''
+				$('#loadCount').find('#length').html(printAmount.length)
+				for (let i = 0; i < printAmount.length; i++) { 
+					let canvas = await html2canvas($('.row').find('#printIt')[i])	
+					$('#loadCount').find('#amount').html(i) 
+					let imageData = canvas.toDataURL("image/png");
+					let img = imageData.replace(/^data:image\/png/, "data:application/octet-stream");
+					
+					imgs += `<img  style="margin-top: 10px; display: block; page-break-after:always; width: 281mm; min-height: 90mm; max-height: 90mm; transform: rotate(-90deg); -webkit-transform-origin: left top; -webkit-transform: rotate(-90deg) translateX(-100%);    -moz-transform: rotate(-90deg) translateX(-100%);    -ms-transform: rotate(-90deg) translateX(-100%);    -o-transform: rotate(-90deg) translateX(-100%);" src="${img}">`
+
+				}
+
+				let mywindow = window.open('','Print-Window');
+						mywindow.document.write('<html><head>');
+						mywindow.document.write('</head><body >');
+						mywindow.document.write(imgs);
+						mywindow.document.write('</body></html>');
+
+						setTimeout(function(){mywindow.print();},10);
+						setTimeout(function(){mywindow.close();},20);
+				$('.document').addClass('flip')
+			} else {
+
+				let printAmount = $('.row').find("#printIt")
+				var imgs = ''
+				$('#loadCount').find('#length').html(printAmount.length)
+				for (let i = 0; i < printAmount.length; i++) { 
+					let canvas = await html2canvas($('.row').find('#printIt')[i])	
+					$('#loadCount').find('#amount').html(i)
+
+					let imageData = canvas.toDataURL("image/png");
+					let img = imageData.replace(/^data:image\/png/, "data:application/octet-stream");
+					
+					imgs += `<img src="${img}">`
+
+				}
+
+
+				let mywindow = window.open('','Print-Window');
+						mywindow.document.write('<html><head>');
+						mywindow.document.write('</head><body >');
+						mywindow.document.write(imgs);
+						mywindow.document.write('</body></html>');
+
+						setTimeout(function(){mywindow.print();},10);
+						setTimeout(function(){mywindow.close();},20);
+
+			}
+
+			//ozaczenie jako wydrukowana
+			markAsPrinted()
+			$('#loadCount').addClass('loadCount')
+			$('#loadingIcon').addClass('notLoading')
+
+		})
+	})
+	</script>
+
+<script>
+	async function markAsPrinted(){
+		//przygotowanie id wszystkich zamowien
+		let orderData = '<%- JSON.stringify(order) %>';
+		let parsedOrderData = JSON.parse(orderData);
+		console.log("Parsed:", parsedOrderData);
+		var idArray = [parsedOrderData.order_id]
+		// parsedSettles.forEach(settles =>{
+		// 	settles.forEach( settle => {
+		// 		idArray.push(settle.order_id)
+		// 	})
+		// })
+
+		//wysłanie żądania o oznaczenie jako wydrukowane
+		const response = await fetch("/markasprinted", {
+		method: 'POST',
+		headers: {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+		},
+		body: `{
+		"Id": ${JSON.stringify(idArray)}
+		}`,
+		});
+
+		response.json().then(data => {
+		console.log(data);
+		});
+    }
+</script>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+
+<script>
+		$(document).ready(async () => {
+
+		var doc = new jsPDF({
+			orientation: 'p',
+			unit: 'mm',
+			format: 'a4',
+			putOnlyUsedFonts:true,
+			floatPrecision: 16
+		});
+		var specialElementHandlers = {
+				'#actionButtons': function (element, renderer) {
+						return true;
+				}
+		};
+
+		let printAmount = $('.row').find("#printIt"), imgs = ''
+		await new Promise(resolve => setTimeout(()=>{$('#drukuj').removeClass('isDisabled'), resolve()},500))
+		for (let i = 0, j = 0; i < printAmount.length; i++) { 
+			
+			let canvas = await html2canvas($('.row').find('#printIt')[i])
+			let imageData = canvas.toDataURL("image/png")
+			imgs += imageData.replace(/^data:image\/png/, "data:application/octet-stream");
+			doc.addImage(imageData, 'png',19,19+(j*65),172,65);
+			j++
+			if(j && j % 4 === 0) doc.addPage('a4', 'p'), j = 0
+		}
+
+		if(imgs) $('#pdf').removeClass('isDisabled')
+
+		$('#pdf').on('click', function () {
+			doc.save('etykieta-<%= order.id %>.pdf');
+
+		});
+
+	})
+	
+	</script>
+

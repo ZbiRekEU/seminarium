@@ -1,0 +1,688 @@
+<%- contentFor('HeaderCss') %>
+  <link href="public/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<%- contentFor('breadcrumb') %>
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item"><a href="/moje-zamowienia">Zamówienia</a></li>
+                      <li class="breadcrumb-item active">Edytuj</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">Edytuj Zamówienie</h4>
+          </div>
+      </div>
+  </div>
+	<style>
+		.checkbox-style {
+			float: left;
+			margin-right: 20px;
+			width: unset;
+		}
+		.notification {
+			display: unset; 
+   		width: unset;
+			margin-left: 15px;
+		}
+	</style>
+<%- contentFor('body') %>
+
+<form action="/dodaj-produkt" method="post" class="absoluteForm">
+  <div class="edit-order-background add-product-hidden ">
+      <div class="order-edit-header">
+        <div class="row">
+          <div class="col-3">
+
+          </div>
+          <div class="col-6" style="text-align: center;">
+            Dodaj nowy produkt
+          </div>
+          <div class="col-3" style="text-align: right">
+            <button type="button" class="close" id="closeAddProduct" aria-label="Zamknij" style="color:white;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="addProductForm">
+        <br>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="form-group col-md-4">
+            <label for="name">Nazwa:</label>
+            <input type="text" class="form-control" id="name" name="name"></input>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="package_amount">Ilość paczek:</label>
+            <input type="number" class="form-control" id="package_amount_input" name="package_amount" oninput="generujInputy()" value="1"></input>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="amount">Ilość sztuk:</label>
+            <input type="number" class="form-control" id="amount" name="amount" value="1"></input>
+          </div>
+          <div class="col-2"></div>
+        </div>
+
+        <div id="inputContainer" style="max-height: 60vh; overflow-y: auto; overflow-x: hidden;"></div>
+
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="1" name="SaveInMyProducts" id="SaveInMyProducts" checked>
+              <label class="form-check-label" for="SaveInMyProducts">
+                Zapisz w mojej liście produktów
+              </label>
+            </div>
+          </div>
+          <div class="col-2" style="text-align: right;">
+            <button type="button" id="addProductButton" class="btn btn-dark">Dodaj produkt</button>
+          </div>
+          <div class="col-2"></div>
+        </div> <br>
+        </form>
+      </div>
+  </div>
+</form>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+
+                              <div class="row">
+                                <div class="col-6">
+                                  <h4 class="mt-0 header-title">Edytuj zamówienie #<%= order.id %></h4>
+                                  <p class="text-muted m-b-30 font-14">Zamówienie może być edytowane aż nie zostanie odebrane na magazynie.</p>
+                                </div>
+                                <div class="col-6">
+                                  <button type="submit" id="sendOffer" class="btn btn-success waves-effect waves-light buttonSubmit col-4 float-right" value="validate" style="margin: 10px -10px 0px;">Zapisz zmiany</button>
+                                </div>
+                              </div>
+
+
+                                <form action="/edytuj-moje-zamowienie" method="post" id="mainform">
+                                  <input type="hidden" name="order_id" id="order_id" value="<%= order.order_id %>">
+                                  <input type="hidden" name="productJSON" id="productList" value="" />
+                                    <div class="row">
+                                      <div class="col-sm-10 card " style="padding-top: 5px;">
+                                        <div class="row">
+
+                                          <div class="col-sm-4">
+                                              <div class="form-group">
+                                                  <label for="customer_name">Nazwa Odbiorcy</label>
+                                                  <input id="customer_name" name="customer_name" type="text" class="form-control" value="<%= order.customer_name %>" required>
+                                              </div>
+                                          </div>
+                                          
+                                          <div class="col-lg-3 ">
+                                            <div class="form-group">
+                                              <label for="postal_code">Kod pocztowy</label>
+                                              <input id="postal_code" name="postal_code" type="text" class="form-control" value="<%= order.postal_code %>" required >
+                                            </div>
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="city">Miejscowość</label>
+                                                <input id="city" name="city" type="text" class="form-control" value="<%= order.city %>" required>
+                                            </div>
+                                          </div>
+                                        </div>
+                                          
+                                        <div class="row">
+
+                                          <div class="col-sm-4">
+                                              <div class="form-group">
+                                                  <label for="street">Ulica</label>
+                                                  <input id="street" name="street" type="text" class="form-control" value="<%= order.street %>" required>
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-2" style="padding-right: 0px">
+                                            <div class="form-group">
+                                              <label for="house_number">Numer domu</label>
+                                              <input id="house_number" name="house_number" type="text" class="form-control" value="<%= order.house_number %>" required>
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-2" style="">
+                                            <div class="form-group">
+                                              <label for="apartment_number">Mieszkanie</label>
+                                              <input id="apartment_number" name="apartment_number" type="text" value="<%= order.apartment_number %>" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="customer_phone">Numer telefonu</label>
+                                                  <input id="customer_phone" name="customer_phone" type="text" class="form-control" data-parsley-type="number" value="<%= order.customer_phone %>" required>
+                                              </div>
+                                          </div>
+                                        
+                                         
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-md-2 float-right">
+                                            <div class="form-group ">
+                                              <label class="control-label">Status przesyłki</label>
+                                              <select class="form-control select2 col-12" id="status_przesylki" name="status" disabled>
+                                                <% switch(order.status) { case 'złożone' : %>
+                                                  <option value="złożone" selected>Zamówienie Złożone</option>
+                                                  <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                  <option value="wysłane">W drodze</option>
+                                                  <option value="zrealizowane">Dostarczone</option>
+                                                  <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'przygotowane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" selected class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'wysłane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane" selected>W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'zrealizowane' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane" selected>Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break; case 'zwrot' : %>
+                                                <option value="złożone" >Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot" selected>Wydano klientowi (zwrot)</option>
+                                                <% break; default: %>
+                                                <option value="złożone">Zamówienie Złożone</option>
+                                                <option value="przygotowane" class="dostarczone">Dostarczone na magazyn</option>
+                                                <option value="wysłane">W drodze</option>
+                                                <option value="zrealizowane">Dostarczone</option>
+                                                <option value="zwrot">Wydano klientowi (zwrot)</option>
+                                                <% break;} %>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-2">
+                                            <div class="form-group">
+                                               <label class="control-label">Forma płatności</label>
+                                                <select class="form-control select2" id="platnosc" name="payment" required>
+                                                    <optgroup label="Wybierz">
+                                                      <% switch(order.payment) { case 'Pobranie' : %>
+                                                      <option value="Pobranie" selected>Pobranie</option>
+                                                      <option value="Opłacone" >Opłacone</option>
+                                                      <% break; case 'Opłacone' : %>
+                                                      <option value="Pobranie">Pobranie</option>
+                                                      <option value="Opłacone" selected>Opłacone</option>
+                                                      <% break; default: %>
+                                                      <option value="Pobranie">Pobranie</option>
+                                                      <option value="Opłacone">Opłacone</option>
+                                                      <% break;} %>
+                                                </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-2">
+                                              <div class="form-group">
+                                                <label for="price">Kwota</label>
+                                                <input id="price" name="price" type="text" class="form-control" value="<%= order.price %>">
+                                              </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label for="additional_info">Dodatkowe informacje</label>
+                                              <input id="additional_info" name="additional_info" type="text" value="<%= order.additional_info %>" class="form-control">
+                                            </div>
+                                          </div>
+                                        </div>
+                                                                                <div class="row">
+                                          <div class="col-3">
+                                            <div class="form-group">
+                                              <%if(order.bringing== 0){%>
+                                                <input id="bringing" name="bringing" type="checkbox" class="form-control checkbox-style notification_checkbox">
+                                              <%}else{%>
+                                                <input id="bringing" name="bringing" type="checkbox" checked class="form-control checkbox-style notification_checkbox">
+                                              <%}%>
+                                              <label for="bringing">Dostawa z wniesieniem</label>
+                                            </div>
+                                          </div>
+                                          <div class="col-3">
+
+                                            <div class="form-group">
+                                              <label class="control-label">Dostawa czy odbiór od klienta?</label>
+                                              <select class="form-control select2" value="<%= order.direction %>" id="direction" name="direction" required>
+                                                <optgroup label="Wybierz">
+                                                  <%if(order.direction== 'Odbiór'){%>
+                                                  <option value="Dostawa">Dostawa</option>
+                                                  <option value="Odbiór" selected>Odbiór</option>
+                                                  <%}else{%>
+                                                    <option value="Dostawa" selected>Dostawa</option>
+                                                    <option value="Odbiór">Odbiór</option>
+                                                  <%}%>
+                                                </select>
+                                              </div>
+                                            </div>
+                                        </div>
+                                      </div>
+
+                                        <div class="col-sm-2 ">
+                                          
+                                          <div class="card row" style="padding: 20px; margin-left: 10px;">
+                                            <h4 class="mt-0 header-title text-center">Powiadomienia</h4> <hr>
+                                            <div class="form-group"> 
+                                              <input id="SMS_from_company" name="SMS_from_company" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.SMS_from_company) { %>checked<% } %>>
+                                              <label for="SMS_from_company"><strong>SMS</strong> do firmy </label>
+                                              <input id="sms_company" name="sms_company" type="text" class="form-control notification_input" value="<%= order.sms_company %>" >
+                                            </div>
+                                            <div class="form-group">
+                                              <input id="EMAIL_from_company" name="EMAIL_from_company" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.EMAIL_from_company) { %>checked<% } %>>
+                                              <label for="EMAIL_from_company"><strong>Email</strong> do firmy </label>
+                                              <input id="email_company" name="email_company" type="text" class="form-control notification_input" value="<%= order.sms_company %>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                              <input id="SMS_from_client" name="SMS_from_client" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.SMS_from_client) { %>checked<% } %>>
+                                              <label for="SMS_from_client"><strong>SMS</strong> do klienta </label>
+                                              <input id="sms_client" name="sms_client" type="text" class="form-control notification_input" value="<%= order.sms_client %>">
+                                            </div>
+                                            <div class="form-group">
+                                              <input id="EMAIL_from_client" name="EMAIL_from_client" type="checkbox" class="form-control checkbox-style notification_checkbox" <% if(order.EMAIL_from_client) { %>checked<% } %>>
+                                              <label for="EMAIL_from_client"><strong>Email</strong> do klienta </label>
+                                              <input id="email_client" name="email_client" type="text" class="form-control notification_input" value="<%= order.email_client %>">
+                                            </div>
+                                            
+                                          </div>
+                                          
+                              
+                                    </div>
+                                  </div>
+                                  <div class="row" style="margin-top: 20px">
+                                      
+                                    <div class="col-md-4" style='padding-left: 0;'>
+                                      <div class="card" style="padding: 20px;">
+                                        <div class="row " >
+                                          <div class="col-7">
+                                            <h4 class="mt-0 header-title">Dodaj produkty do zamówienia</h4>
+                                            <p class="text-muted m-b-30 font-14">Wybierz produkty z listy lub dodaj nowy</p>
+                                          </div>
+                                          <div class="col-5" style="padding-right: 0;">
+                                            <button type="button" id="AddProduct" class="btn btn-success waves-effect waves-light buttonSubmit  float-right" value="validate">Utwórz nowy produkt</button>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="input-group">
+                                            <select class="custom-select" id="selectedProduct" style="margin-left: 10px;" <% if(products == null){ %> disabled <% } %>>
+                                              <% if(products !== null){ %>
+                                              <option value="defaultSelected" selected>Wybierz produkty z listy...</option>
+                                                <% products.forEach((product) => { %>
+                                                  <option value="<%= product.product_id %>"><%= product.name %></option>
+                                                <% }) %>
+                                              <% } else {%>
+                                                <option selected>Brak dodanych produktów</option>
+                                              <% } %>
+                                            </select>
+                                            <div class="input-group-append">
+                                              <button id="AddProductToOrder" class="btn btn-outline-secondary" type="button" <% if(products == null){ %> disabled <% } %>>Dodaj produkt</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                     </div>
+                                    </div>
+                                    <div class="col-md-8" style='padding-right: 0;'>
+                                      <div class="card" style="padding: 20px;">
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <h4 class="mt-0 header-title text-center">Twoje zamówienie</h4>
+                                            <p class="text-muted m-b-10 font-14 text-center">Po edycji produktów w zamówieniu, generowane są nowe etykiety na wszystkie paczki.</p>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <table id="datatable" class="table dt-responsive nowrap table-vertical text-center" width="100%" cellspacing="0">
+                                            <thead>
+                                              <tr>
+                                                <th>Id Produktu</th>
+                                                <th>Nazwa</th>
+                                                <th>Ilość paczek</th>
+                                                <th>Szerokość</th>
+                                                <th>Wysokość</th>
+                                                <th>Głębokość</th>
+                                                <th>Objętość</th>
+                                                <th>Waga</th>
+                                                <th class="col-1">Ilość</th>
+                                                <th>Usuń</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody id="activeOrderList">
+                                              
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+								</div>					
+<%- contentFor('FooterJs') %>
+
+
+<%- contentFor('BottomJs') %>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+	generujInputy()
+    // Lista posiadanych produktów
+    /* ------------------------------------*/
+    let product_data = []
+
+    <% if(products !== null){ %>
+        <% products.forEach((product) => { %>
+          product_data['<%= product.product_id %>'] = {
+          'product_id': '<%= product.product_id %>',
+          'id': '<%= product.id %>',
+          'name': '<%= product.name %>',
+          'width': '<%= product.width %>',
+          'height': '<%= product.height %>',
+          'depth': '<%= product.depth %>',
+          'volume': '<%= product.volume %>',
+          'weight': '<%= product.weight %>',
+          'package_amount': <%= product.package_amount %>,
+          'amount': 1
+          }
+        <% }) %>
+    <% } %>
+    /* ------------------------------------ */ 
+    console.log(product_data)
+
+    var product_list = []
+    let order_products =[]
+
+    <% if(order_products !== null){ %>
+        <% order_products.forEach((order_product) => { %>
+          addProductToList('<%= order_product.product_id %>', <%= order_product.product_amount %>)
+        <% }) %>
+    <% } %>
+    
+    <% if(order.status !== 'złożone'){  %>
+
+      $('input, select, button').each(function(){
+        $(this).attr('disabled', 'disabled')
+      })
+
+    <% } %>
+
+    function addProductToList(id, amount){
+      if(id == null) return console.log('Nie wybrano przedmiotu')
+      let prod = product_data[id]
+      prod.amount = amount
+      product_list.push(prod)
+      // console.log(id, amount)
+      // console.log(product_list)
+      let d = product_data[id]
+      let row = '<tr id="product-'+d.product_id+'"> <td>#'+ d.id +' <input type="hidden"  name="product_id" value="'+id+'"> </td><td>'+ d.name +'</td><td>'+ d.package_amount +'</td><td>'+ d.width +'</td><td>'+ d.height +'</td><td>'+ d.depth +'</td><td>'+ d.volume +'</td><td>'+ d.weight +'</td> <td ><input type="number" id="product_amount" name="product_amount" product_id="'+d.product_id+'" value="'+amount+'" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></td> <td style="margin: 0 auto;"><button type="button" style="float: initial; font-size: 2rem;" class="close removeProduct" data="'+id+'" aria-label="Usuń z zamówienia"> <span aria-hidden="true">&times;</span> </button></td> </tr>'
+      $('#selectedProduct > option[value="'+id+'"]').hide()
+      $('#selectedProduct').val('defaultSelected').change();
+      updateProductList()
+      $('#activeOrderList').append(row)
+    }
+    function addNewProductToList(id, amount){
+      if(id == null) return console.log('Nie wybrano przedmiotu')
+      let prod = product_data[id]
+      prod.amount = amount
+      product_list.push(prod)
+      // console.log(id, amount)
+      // console.log(product_list)
+      let d = product_data[id]
+      let row = '<tr id="product-'+d.product_id+'"> <td>#'+ d.id +' <input type="hidden"  name="product_id" value="'+id+'"> </td><td>'+ d.name +'</td><td>'+ d.package_amount +'</td><td>'+ d.packages[0].width +'</td><td>'+ d.packages[0].height +'</td><td>'+ d.packages[0].depth +'</td><td>'+ d.packages[0].volume +'</td><td>'+ d.packages[0].weight +'</td> <td ><input type="number" id="product_amount" name="product_amount" product_id="'+d.product_id+'" value="'+amount+'" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></td> <td style="margin: 0 auto;"><button type="button" style="float: initial; font-size: 2rem;" class="close removeProduct" data="'+id+'" aria-label="Usuń z zamówienia"> <span aria-hidden="true">&times;</span> </button></td> </tr>'
+      $('#selectedProduct > option[value="'+id+'"]').hide()
+      $('#selectedProduct').val('defaultSelected').change();
+      updateProductList()
+      $('#activeOrderList').append(row)
+    }
+
+    function removeProductFromList(id){
+      console.log('delete')
+      console.log(product_list)
+      $.each(product_list, ( index, value ) => {
+        if(value !== undefined){
+          console.log(value, index)
+          if(value.product_id == id){
+            product_list.splice(index, 1)
+            updateProductList()
+          }
+        }
+      });
+      
+    }
+
+    function updateProductList(){
+      const textData = JSON.stringify(product_list);
+      $('#productList').attr('value', textData)
+    }
+
+    $('#addProductButton').on('click', ()=>{
+      var SaveInMyProducts = $('#SaveInMyProducts').is(":checked")
+      var liczba = document.getElementById("package_amount_input").value;
+      let saveIt = '0'
+      if(SaveInMyProducts) saveIt = '1'
+      let packages = []
+      for(let i=1; i<=liczba; i++){
+        let package ={
+          weight: $(`#weight${i}`).val() || 0,
+          width: $(`#width${i}`).val() || 0,
+          height: $(`#height${i}`).val() || 0,
+          depth: $(`#depth${i}`).val() || 0,
+          volume: $(`#volume${i}`).val() || 0,
+        }
+        packages.push(package)
+      }
+      var newProduct = {
+            name: $('#name').val(),
+            package_amount: $('#package_amount_input').val() || 1,
+            amount: $('#amount').val() || 1,
+            packages: packages,
+            returnJson: '1',
+            SaveInMyProducts: saveIt
+          }
+        console.log(newProduct)
+        $.post( "/dodaj-produkt",  newProduct , ( data ) => {
+          if(data.product_id !== null){
+            newProduct.product_id = data.product_id
+            newProduct.id = data.product_id.split('-')[0]
+            newProduct.amount = 1
+            product_data[data.product_id] = newProduct
+            addNewProductToList(data.product_id, 1)
+            closeAddProduct()
+          }
+        }, "json");
+    })
+
+
+    $('#sendOffer').on('click', ()=>{
+      $('#mainform').submit()
+    })
+
+    $('#AddProduct').on('click', ()=>{
+      $('.add-product-hidden').slideDown("slow")
+    })
+    $("#closeAddProduct").on('click', ()=>{
+      closeAddProduct();
+    })
+
+    function closeAddProduct() {
+      $('.add-product-hidden').hide()
+    }
+    
+    $('#activeOrderList').on('change', '#product_amount', (e)=>{
+      let product_id = $(e.currentTarget.outerHTML).attr('product_id')
+      let amount = $("#product_amount[product_id='"+product_id+"'").val()
+
+      $.each(product_list,  ( index, value ) => {
+        if(value.product_id == product_id){
+          product_list[index].amount = parseInt(amount)
+          console.log(product_list[index])
+        }
+      });
+      updateProductList()
+    })
+
+    
+    $('#AddProductToOrder').on('click', ()=>{
+      var selected_id = $('#selectedProduct > option').filter(":selected").attr('value')
+      console.log(selected_id)
+      if(selected_id !== 'defaultSelected') addProductToList(selected_id, 1)
+    })
+
+
+    $('#activeOrderList').on('click', '.removeProduct', (e)=>{
+       let id = $(e.currentTarget.outerHTML).attr('data')
+       removeProductFromList(id)
+      $('#product-' + id).remove()
+      $('#selectedProduct > option[value="'+id+'"]').show()
+    })
+
+
+
+    $('#addProductButton').on('click', ()=>{
+      var SaveInMyProducts = $('#SaveInMyProducts').is(":checked")
+      let saveIt = '0'
+      if(SaveInMyProducts) saveIt = '1'
+      var newProduct = {
+            name: $('#name').val(),
+            package_amount: $('#package_amount').val() || 0,
+            weight: $('#weight').val() || 0,
+            width: $('#width').val() || 0,
+            height: $('#height').val() || 0,
+            depth: $('#depth').val() || 0,
+            volume: $('#volume').val() || 0,
+            returnJson: '1',
+            SaveInMyProducts: saveIt
+          }
+        console.log(newProduct)
+        $.post( "/dodaj-produkt",  newProduct , ( data ) => {
+          if(data.product_id !== null){
+            newProduct.product_id = data.product_id
+            newProduct.id = data.product_id.split('-')[0]
+            newProduct.amount = 1
+            product_data[data.product_id] = newProduct
+            addProductToList(data.product_id, 1)
+            closeAddProduct()
+          }
+        }, "json");
+    })
+
+
+    $('#AddProduct').on('click', ()=>{
+      $('.add-product-hidden').slideDown("slow")
+    })
+
+
+    $('#activeOrderList').on('click', '.removeProduct', (e)=>{
+       let id = $(e.currentTarget.outerHTML).attr('data')
+       removeProductFromList(id)
+      $('#product-' + id).remove()
+      $('#selectedProduct > option[value="'+id+'"]').show()
+    })
+
+
+      $('#SMS_from_company').change(function() {
+        $('#sms_company').toggle()
+      });
+      $('#EMAIL_from_company').change(function() {
+        $('#email_company').toggle()
+      });
+      $('#SMS_from_client').change(function() {
+        $('#sms_client').toggle()
+      });
+      $('#EMAIL_from_client').change(function() {
+        $('#email_client').toggle()
+      });
+
+      <% if(order.SMS_from_company) { %>$('#sms_company').toggle()<% } %>
+      <% if(order.EMAIL_from_company) { %>$('#email_company').toggle()<% } %>
+      <% if(order.SMS_from_client) { %>$('#sms_client').toggle()<% } %>
+      <% if(order.EMAIL_from_client) { %>$('#email_client').toggle()<% } %>
+
+
+			$('#customer_phone').on('keyup', function() {
+				$('#sms_client').val($(this).val())
+			})
+
+      if($('#platnosc').val() == 'Opłacone'){
+        $('#price').prop('disabled', true);
+      }
+
+      $('#platnosc').on('change', ()=>{
+        console.log($('#platnosc').val());
+        switch($('#platnosc').val()){
+          case 'Pobranie': 
+          console.log("Działam");
+            $('#price').prop('disabled', false);
+            break;
+
+          case 'Opłacone':
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+          default:
+            $('#price').val(0);
+            $('#price').prop('disabled', true);
+            break;
+        }
+      })
+
+})
+</script>
+
+<script>
+  function generujInputy() {
+      var liczba = document.getElementById("package_amount_input").value;
+      var container = document.getElementById("inputContainer");
+
+      // Wyczyszczenie poprzedniej zawartości
+      container.innerHTML = "";
+
+      // Generowanie inputów
+      for (var i = 0; i < liczba; i++) {
+        var div = document.createElement("div");
+        div.className = "row";
+        div.innerHTML=`
+              <div class="col-2"></div>
+                <div class="col-8 border p-3">
+                  <div class="row">
+                  <div class="col-3 d-flex align-items-center">
+                    <h6 style="margin: 0 auto;" >Paczka ${i+1}</h6>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="width${i+1}">Szerokość w cm:</label>
+                    <input type="number" class="form-control" id="width${i+1}" name="width${i+1}"></input>
+                    <label for="height${i+1}">Wysokość w cm:</label>
+                    <input type="number" class="form-control" id="height${i+1}" name="height${i+1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="depth${i+1}">Głębokość w cm:</label>
+                    <input type="number" class="form-control" id="depth${i+1}" name="depth${i+1}"></input>
+                    <label for="volume${i+1}">Objętość w m3:</label>
+                    <input type="number" class="form-control" id="volume${i+1}" name="volume${i+1}"></input>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="weight${i+1}">Waga w kg:</label>
+                    <input type="number" class="form-control" id="weight${i+1}" name="weight${i+1}"></input>
+                  </div>
+                </div>
+                </div>
+              `
+        container.appendChild(div);
+      }
+    }
+</script>

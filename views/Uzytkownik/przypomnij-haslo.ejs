@@ -1,0 +1,47 @@
+
+<% include ../Partials/HeaderRoot  %>
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div class="accountbg"></div>
+        <div class="wrapper-page">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h3 class="text-center m-0">
+                        <a href="/" class="logo logo-admin"><img src="public/assets/images/logo.png" height="30" alt="logo"></a>
+                    </h3>
+
+                    <div class="p-3">
+                        <h4 class="font-18 m-b-5 text-center">Przypomnij hasło</h4>
+                        <p class="text-muted text-center">Wpisz swój adres email aby otrzymać dalsze instrukcje!</p>
+
+                        <form class="form-horizontal m-t-30" action="/przypomnij-haslo" method="post">
+
+                            <div class="form-group">
+                                <label for="useremail">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Wpisz email">
+                            </div>
+
+                            <div class="form-group row m-t-20">
+                                <div class="col-12 text-right">
+                                    <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Reset</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="m-t-40 text-center">
+                <p class="text-white">Pamiętasz hasło ? <a href="login" class="font-500 font-14 text-white font-secondary"> Zaloguj się tutaj </a> </p>
+                <p class="text-white">©  <%= new Date().getFullYear() - 1; %> - <%= new Date().getFullYear(); %> Verniro. stworzone przez <i class="mdi mdi-heart text-danger"></i> <a href="https://mayam.pl" style="color:white; text-weight: bold;">Mayam</a></p>
+            </div>
+
+        </div>
+        <% include ../Partials/FooterRoot  %>

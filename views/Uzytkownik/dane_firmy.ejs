@@ -1,0 +1,109 @@
+
+<% include ../Partials/HeaderRoot  %>
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div class="accountbg"></div>
+        <div class="wrapper-page" style="max-width: 880px;">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h3 class="text-center m-0">
+                        <a href="/" class="logo logo-admin"><img src="public/assets/images/logo.png" height="30" alt="logo"></a>
+                    </h3>
+
+                    <div class="p-3">
+                        <h4 class="font-18 m-b-5 text-center">Dane Firmy</h4>
+                        <p class="text-muted text-center">Podaj dane do faktury</p>
+
+                        <form class="form-horizontal m-t-30" action="dane-firmy" method="post">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <% if (user_id) { %>
+                                <input type="hidden" name="user_id" value="<%= user_id %>" />
+                              <% } %>
+                              <div class="form-group">
+                                  <label for="useremail">Pełna nazwa firmy</label>
+                                  <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Wpisz pełną nazwę firmy" required>
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="username">Krótka nazwa firmy</label>
+                                  <input type="text" class="form-control" id="short_name" name="short_name" placeholder="Wpisz krótką nazwę firmy" required>
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="userpassword">Numer Telefonu</label>
+                                  <input type="text" class="form-control" id="phone" name="phone" placeholder="Wpisz numer telefonu" required>
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="userpassword">Miasto</label>
+                                  <input type="text" class="form-control" id="city" name="city" placeholder="Podaj miasto" required>
+                              </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                              <div class="form-group">
+                                  <label for="name">NIP</label>
+                                  <input type="text" class="form-control" id="nip" name="nip" placeholder="Wpisz NIP">
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="surname">Ulica</label>
+                                  <input type="text" class="form-control" id="street" name="street" placeholder="Wpisz ulice">
+                              </div>
+
+                              <div class="row">
+                                <div class="col-md-6">
+
+                                  <div class="form-group">
+                                      <label for="name">Numer domu</label>
+                                      <input type="text" class="form-control" id="house_number" name="house_number" >
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="surname">Numer mieszkania</label>
+                                      <input type="text" class="form-control" id="apartment_number" name="apartment_number">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="surname">Kod pocztowy</label>
+                                  <input type="text" class="form-control" id="postal_code" name="postal_code" placeholder="Podaj kod pocztowy">
+                              </div>
+
+                              <div class="form-group row m-t-20">
+                                  <div class="col-12 text-right">
+                                      <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Zarejestruj się</button>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+
+                            <div class="form-group m-t-10 mb-0 row">
+                                <div class="col-12 m-t-20">
+                                    <p class="font-14 text-muted mb-0">Rejestrując się zgadzasz się z <a href="#">regulaminem Verniro</a></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="m-t-40 text-center">
+                <p class="text-white">Masz już konto? <a href="pages-login" class="font-500 font-14 text-white font-secondary"> Zaloguj się </a> </p>
+                <p class="text-white">©  <%= new Date().getFullYear() - 1; %> - <%= new Date().getFullYear(); %> Verniro. stworzone przez <i class="mdi mdi-heart text-danger"></i> <a href="https://mayam.pl" style="color:white; text-weight: bold;">Mayam</a></p>
+            </div>
+
+        </div>
+
+        <% include ../Partials/FooterRoot  %>

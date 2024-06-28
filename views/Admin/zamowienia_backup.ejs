@@ -1,0 +1,250 @@
+<%- contentFor('HeaderCss') %>
+<!-- DataTables -->
+<link href="public/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="public/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+<%- contentFor('breadcrumb') %>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title-box">
+            <div class="btn-group pull-right">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                    <li class="breadcrumb-item"><a href="/moje-zamowienia">Moje zamówienia</a></li>
+                    <li class="breadcrumb-item active">Historia</li>
+                </ol>
+            </div>
+            <h4 class="page-title">Historia zamówień</h4>
+        </div>
+    </div>
+</div>
+
+<%- contentFor('body') %>
+                <div class="row">
+                    <div class="col-12">
+                      <div class="edit-order-background">
+                        <div class="row edit-order">
+
+                        </div>
+                      </div>
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                              <% if(error == null){ %>
+                                <form class="edit_order" action="edytuj-zamowinie" method="post">
+                                <table id="datatable" class="table  dt-responsive nowrap table-vertical" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Id Zamówienia</th>
+                                        <th>Data złożenia zamówienia</th>
+                                        <th>Nazwa odbiorcy</th>
+                                        <th>Telefon odbiorcy</th>
+                                        <th>Miasto</th>
+                                        <th>Adres</th>
+                                        <th>Status</th>
+                                        <th>Akcja</th>
+                                        <th>Opcje</th>
+                                    </tr>
+                                    </thead>
+                                  <tbody>
+
+                                      <% orders.forEach((order) => { %>
+                                        <tr class="edit-order-<%= order.order_id %> edit-hidden" style="background-color:#6c757d; color:white; font-weight: 600;">
+                                          <td colspan="2" style="text-align: center;">
+                                            <b>Data:</b> <br>
+                                            <%= order.date %>
+                                          </td>
+                                          <td colspan="7" style="text-align: right; font-size: 30px;"> Edytuj zamówienie</td>
+                                          <td></td>
+                                        </tr>
+                                          <tr class="order-<%= order.order_id %>">
+                                              <td>
+                                                  <a href="/karta-przewozowa/<%= order.order_id %>" class="font-600 text-muted">#<%= order.id %></a>
+                                              </td>
+                                              <td><%= order.date %></td>
+                                              <td><%= order.customer_name %></td>
+                                              <td><%= order.customer_phone %></td>
+                                              <td><%= order.city %> <%= order.postal_code %> </td>
+                                              <td><%= order.street %> <%= order.house_number %> <% if (order.apartment_number != '') { %> / <%= order.apartment_number %>  <% } %></td>
+
+                                              <% switch(order.status) {
+                                                case 'złożone' : %>
+                                                  <td><span class="badge badge-secondary">Zamówienie złożone</td>
+                                                <% break;
+                                                case 'przygotowane' : %>
+                                                  <td><span class="badge badge-info">Przygotowywane do wysyłki</td>
+                                                <% break;
+                                                case 'wysłane' : %>
+                                                  <td><span class="badge badge-primary">Zamówienie jest w drodze</td>
+                                                <% break;
+                                                  case 'zrealizowane' : %>
+                                                  <td><span class="badge badge-success">Zrealizowno </td>
+                                                <% break;
+                                                default: %>
+                                                  <td><span class="badge badge-secondary">Nieznany</td>
+                                                <% break;
+                                              }
+                                              %>
+
+
+                                                <% if(order.payment == 'Opłacone'){ %>
+                                                    <td><span class="badge badge-success">Opłacone</span></td>
+                                                <% } else{ %>
+                                                  <td><span class="badge badge-secondary">Pobranie <%= order.price %> zł</span></td>
+                                                  <% } %>
+
+                                              <td style="padding-top: 0; padding-bottom:0; font-size: 2rem;">
+                                                <a onclick="orderSettings('<%= order.order_id %>')" href="javascript:void(0);" class="m-r-20 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Zobacz kartę przewozową"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                                  <a href="/karta-przewozowa/<%= order.order_id %>" class="m-r-20 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Zobacz kartę przewozową"><i class="mdi mdi-file-pdf-box font-24"></i></a>
+                                              </td>
+                                          </tr>
+                                          <tr class="edit-hidden edit-order-<%= order.order_id %>">
+                                            <td style="text-align: center;">
+                                              <div class="form-group" style="text-align: center; font-size: 25px;">
+                                                <label for="customer_name" style="text-align: center;">Nadawca</label>
+                                                <button type="button" class="btn btn-secondary"><%= order.customer_name %></button>
+                                              </div>
+                                              <b>faktura:</b> <br>
+                                              <a href="/faktura/<%= order.user_id %>" class="font-600 text-muted">#<%= order.id %></a> <br> <br>
+
+                                            </td>
+                                            <td colspan="3">
+                                              <div class="form-group">
+                                                  <label for="products">Przedmioty do wysłania</label>
+                                                  <textarea class="form-control" id="products" name="products" rows="5"></textarea>
+                                              </div>
+                                            </td>
+
+                                            <td>
+                                              <div class="row">
+                                                <div class="form-group">
+                                                  <label for="customer_name">Nazwa Odbiorcy</label>
+                                                  <input id="customer_name" name="customer_name" type="text" value="<%= order.customer_name %>" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                  <label for="customer_phone">Numer telefonu</label>
+                                                  <input  id="customer_phone" name="customer_phone" type="text" value="<%= order.customer_phone %>" class="form-control">
+                                                </div>
+
+                                              </div>
+
+                                            </td>
+                                            <td class="row">
+                                              <div class="form-group col-6">
+                                                <label for="city">Miejscowość</label>
+                                                <input id="city" name="city" type="text" class="form-control" value="<%= order.city %>">
+                                              </div>
+                                              <div class="form-group col-6">
+                                                <label for="postal_code">Kod pocztowy</label>
+                                                <input id="postal_code" name="postal_code" type="text" class="form-control" value="<%= order.postal_code %>">
+                                              </div>
+                                              <div class="form-group col-6">
+                                                <label for="street">Ulica</label>
+                                                <input id="street" name="street" type="text" class="form-control" value="<%= order.street %>">
+                                              </div>
+
+
+                                                <div class="form-group col-3">
+                                                  <label for="house_number">Numer domu</label>
+                                                  <input id="house_number" name="house_number" type="text" class="form-control" value="<%= order.house_number %>">
+                                                </div>
+
+
+                                                <div class="form-group col-3">
+                                                  <label for="apartment_number">Mieszkanie</label>
+                                                  <input id="apartment_number" name="apartment_number" type="text" class="form-control" value="<%= order.apartment_number %>">
+                                                </div>
+
+
+                                            </td>
+                                            <td  >
+                                              <label class="control-label">Status płatności</label>
+                                              <% if(order.payment == 'Opłacone'){ %>
+                                                <div class="form-group">
+                                                  <select class="form-control select2" name="status">
+                                                    <option value="Opłacone" selected>Opłacone</option>
+                                                    <option value="Pobranie">Pobranie</option>
+                                                  </select>
+                                                </div>
+                                              <% } else{ %>
+                                                <div class="form-group">
+                                                  <select class="form-control select2" name="status">
+                                                    <option value="Opłacone">Opłacone</option>
+                                                    <option value="Pobranie" selected>Pobranie</option>
+                                                  </select>
+                                                </div>
+                                              <% } %>
+                                              <div class="form-group " >
+                                                <label class="control-label">Status przesyłki</label>
+                                                <select class="form-control select2 col-12" name="status">
+                                                  <% switch(order.status) {
+                                                    case 'złożone' : %>
+                                                    <option value="złożone" selected>Złożone</option>
+                                                    <option value="przygotowane">Przygotowywane</option>
+                                                    <option value="wysłane">Wysłane</option>
+                                                    <option value="zrealizowane">Zrealizowno</option>
+                                                    <% break;
+                                                    case 'przygotowane' : %>
+                                                    <option value="złożone">Złożone</option>
+                                                    <option value="przygotowane" selected>Przygotowywane</option>
+                                                    <option value="wysłane">Wysłane</option>
+                                                    <option value="zrealizowane">Zrealizowno</option>
+                                                    <% break;
+                                                    case 'wysłane' : %>
+                                                    <option value="złożone">Złożone</option>
+                                                    <option value="przygotowane">Przygotowywane</option>
+                                                    <option value="wysłane" selected>Wysłane</option>
+                                                    <option value="zrealizowane">Zrealizowno</option>
+                                                    <% break;
+                                                    case 'zrealizowane' : %>
+                                                    <option value="złożone">Złożone</option>
+                                                    <option value="przygotowane">Przygotowywane</option>
+                                                    <option value="wysłane">Wysłane</option>
+                                                    <option value="zrealizowane" selected>Zrealizowno</option>
+                                                    <% break;  default: break;}%>
+                                                  </select>
+                                              </div>
+                                              </td>
+                                              <td colspan=2>
+
+                                                    <div class="form-group">
+                                                      <label for="street">Kwota</label>
+                                                      <input id="street" name="street" type="text" class="form-control" value="<%= order.price %>">
+                                                    </div>
+                                                    <div class="form-group" style="margin-top: 45px">
+                                                      <button type="submit" class="btn btn-success float-center" width="60px" name="order_id" value="<%= order.order_id %>">Zapisz zmiany</button>
+                                                    </div>
+                                                  </td>
+
+                                                </tr>
+                                      <% }) %>
+                                    </tbody>
+                                </table>
+                              </form>
+                                <% } else { %>
+                                  <h2>Nie znaleziono zamówień</h2>
+                                <% } %>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+<%- contentFor('FooterJs') %>
+<!-- Datatable js -->
+<script src="public/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="public/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Responsive examples -->
+<script src="public/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+<script src="public/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+ <%- contentFor('BottomJs') %>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+    function orderSettings(id){
+      console.log($('.edit-order-'+id))
+      $('.edit-order-'+id).slideDown("slow")
+    }
+</script>
